@@ -1,25 +1,38 @@
+export interface ViralMoment {
+  startTime: number;
+  endTime: number;
+  score: number;
+  title: string;
+}
+
 export async function detectViralMoments(
-transcript: string
-) {
+  transcript: string
+): Promise<ViralMoment[]> {
 
-console.log("================================");
-console.log("FAKE VIRAL MOMENT DETECTOR");
-console.log("================================");
+  console.log("================================");
+  console.log("FAKE VIRAL MOMENT DETECTOR");
+  console.log("================================");
 
-return `
-Moment 1
-Start: 00:00
-End: 00:15
-Score: 95
+  console.log("Transcript Length:", transcript.length);
 
-Moment 2
-Start: 00:16
-End: 00:30
-Score: 90
-
-Moment 3
-Start: 00:31
-End: 00:45
-Score: 85
-`;
+  return [
+    {
+      startTime: 0,
+      endTime: 10,
+      score: 95,
+      title: "Powerful Opening",
+    },
+    {
+      startTime: 12,
+      endTime: 22,
+      score: 92,
+      title: "Strong Message",
+    },
+    {
+      startTime: 24,
+      endTime: 34,
+      score: 90,
+      title: "Emotional Moment",
+    },
+  ];
 }

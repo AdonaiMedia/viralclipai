@@ -15,7 +15,7 @@ import { analyzeTranscript } from "../intelligence/TranscriptIntelligence";
 import { detectViralMoments } from "../intelligence/ViralMomentDetector";
 
 import { saveAnalysis } from "../database/saveAnalysis";
-import { saveClip } from "../database/saveClip";
+
 
 export async function processVideo(videoId: number) {
   try {
@@ -84,11 +84,11 @@ export async function processVideo(videoId: number) {
 
     // Save Analysis
     await saveAnalysis(
-      videoId,
-      intelligence ?? "",
-      viralMoments ?? "",
-      overallScore
-    );
+  videoId,
+  intelligence ?? "",
+  JSON.stringify(viralMoments),
+  overallScore
+);
 
     console.log("================================");
     console.log("ANALYSIS SAVED");
@@ -115,17 +115,6 @@ export async function processVideo(videoId: number) {
 
     const clipUrl = await uploadClip(outputName);
 
-    // -----------------------------
-    // SAVE CLIP
-    // -----------------------------
-
-    const savedClip = await saveClip(
-      videoId,
-      0,
-      10,
-      clipUrl,
-      overallScore
-    );
 
     console.log("================================");
     console.log("FIRST CLIP GENERATED");
