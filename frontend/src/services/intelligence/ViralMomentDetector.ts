@@ -1,38 +1,50 @@
-export interface ViralMoment {
-  startTime: number;
-  endTime: number;
-  score: number;
-  title: string;
-}
+import {
+  ViralAnalysis,
+  ViralScoringEngine,
+} from "../ai/ViralScoringEngine";
+
+import { ClipRankingEngine } from "../ai/ClipRankingEngine";
 
 export async function detectViralMoments(
   transcript: string
-): Promise<ViralMoment[]> {
-
+) {
   console.log("================================");
-  console.log("FAKE VIRAL MOMENT DETECTOR");
+  console.log("AI VIRAL MOMENT DETECTOR");
   console.log("================================");
 
-  console.log("Transcript Length:", transcript.length);
+  const sentences = transcript
+    .split(".")
+    .map((s) => s.trim())
+    .filter(Boolean);
 
-  return [
-    {
-      startTime: 0,
-      endTime: 10,
-      score: 95,
-      title: "Powerful Opening",
-    },
-    {
-      startTime: 12,
-      endTime: 22,
-      score: 92,
-      title: "Strong Message",
-    },
-    {
-      startTime: 24,
-      endTime: 34,
-      score: 90,
-      title: "Emotional Moment",
-    },
-  ];
+  const clips: ViralAnalysis[] = sentences.map(
+  (sentence, index) => ({
+
+    start: Math.min(index * 2, 4),
+
+    end: Math.min(index * 2 + 2, 6),
+
+    title: sentence,
+
+    reason: sentence,
+
+  })
+);
+
+  const scored = ViralScoringEngine(clips);
+
+  const ranked = ClipRankingEngine(scored, 5);
+
+  console.log("Top Viral Clips:");
+
+  ranked.forEach((clip) => {
+    console.log(
+      clip.start,
+      clip.end,
+      clip.viralScore,
+      clip.title
+    );
+  });
+
+  return ranked;
 }

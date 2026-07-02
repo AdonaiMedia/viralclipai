@@ -2,37 +2,41 @@ import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
 
-export async function extractAudio(
-  inputVideo: string,
-  outputAudio: string
+export async function extractThumbnailFrame(
+  videoPath: string,
+  outputName: string
 ): Promise<string> {
 
   return new Promise((resolve, reject) => {
 
-    const outputDir = path.dirname(outputAudio);
+    console.log("================================");
+    console.log("EXTRACTING THUMBNAIL");
+    console.log("================================");
+
+    const outputDir = path.join(
+      process.cwd(),
+      "storage",
+      "frames"
+    );
 
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    console.log("================================");
-    console.log("RUNNING FFMPEG");
-    console.log("================================");
+    const outputPath = path.join(
+      outputDir,
+      outputName
+    );
 
     const ffmpeg = spawn("ffmpeg", [
       "-y",
       "-i",
-      inputVideo,
-      "-vn",
-      "-acodec",
-      "libmp3lame",
-      "-ar",
-      "44100",
-      "-ac",
-      "2",
-      "-b:a",
-      "192k",
-      outputAudio,
+      videoPath,
+      "-ss",
+      "00:00:03",
+      "-frames:v",
+      "1",
+      outputPath,
     ]);
 
     ffmpeg.stdout.on("data", (data) => {
@@ -44,7 +48,7 @@ export async function extractAudio(
     });
 
     ffmpeg.on("error", (error) => {
-      console.error("FFmpeg Spawn Error:", error);
+      console.error("Thumbnail FFmpeg Error:", error);
       reject(error);
     });
 
@@ -53,15 +57,19 @@ export async function extractAudio(
       if (code === 0) {
 
         console.log("================================");
-        console.log("AUDIO EXTRACTED SUCCESSFULLY");
+        console.log("THUMBNAIL SAVED");
         console.log("================================");
 
-        resolve(outputAudio);
+        console.log(outputPath);
+
+        resolve(outputPath);
 
       } else {
 
         reject(
-          new Error(`FFmpeg exited with code ${code}`)
+          new Error(
+            `Thumbnail FFmpeg exited with code ${code}`
+          )
         );
 
       }

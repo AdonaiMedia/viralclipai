@@ -1,141 +1,126 @@
 import { supabaseServer } from "@/lib/supabase-server";
 
-import { downloadVideo } from "../storage/downloadVideo";
-import { uploadClip } from "../storage/uploadClip";
-import { generateClip } from "../storage/GenerateClip";
-
-import { extractAudio } from "../ffmpeg/extractAudio";
-
-import { transcribeAudio } from "../transcription/transcribe";
-
-import { inspectVideo } from "../inspection/VideoInspection";
-import { inspectAudio } from "../inspection/AudioInspection";
-
-import { analyzeTranscript } from "../intelligence/TranscriptIntelligence";
-import { detectViralMoments } from "../intelligence/ViralMomentDetector";
-
-import { saveAnalysis } from "../database/saveAnalysis";
-
+import { runVideoPipeline } from "../pipelines/VideoPipeline";
+import { runAudioPipeline } from "../pipelines/AudioPipeline";
+import { runTranscriptPipeline } from "../pipelines/TranscriptPipeline";
+import { runClipPipeline } from "../pipelines/ClipPipeline";
+import { runThumbnailPipeline } from "../pipelines/ThumbnailPipeline";
+import { runDatabasePipeline } from "../pipelines/DatabasePipeline";
 
 export async function processVideo(videoId: number) {
+
   try {
-    console.log("==================================");
-    console.log("PROCESSING VIDEO:", videoId);
-    console.log("==================================");
 
-    const { data: video, error } = await supabaseServer
-      .from("videos")
-      .select("*")
-      .eq("id", videoId)
-      .single();
+    console.log("================================");
+    console.log("VIRALCLIP AI ENGINE");
+    console.log("================================");
 
-    if (error) {
-      throw error;
-    }
+    const { data: video, error } =
+      await supabaseServer
+        .from("videos")
+        .select("*")
+        .eq("id", videoId)
+        .single();
 
-    console.log("VIDEO FOUND:", video);
+    if (error) throw error;
 
-    // Download Video
-    const localVideo = await downloadVideo(video.file_name);
+    console.log("VIDEO:", video);
+    const {
 
-    // Video Inspection
-    const inspection = await inspectVideo(localVideo);
+  localVideo,
 
-    if (!inspection.canProcess) {
-      throw new Error("Video rejected by AI Inspection.");
-    }
+  inspection,
 
-    // Extract Audio
-    const audioPath = "storage/audio/audio.mp3";
-
-    const extractedAudio = await extractAudio(
-      localVideo,
-      audioPath
-    );
-
-    // Audio Inspection
-    const audioInspection = await inspectAudio(
-      extractedAudio
-    );
-
-    // Overall Score
-    const overallScore = Math.round(
-      (
-        inspection.qualityScore +
-        audioInspection.audioQuality +
-        inspection.viralPotential
-      ) / 3
-    );
-
-    // Transcription
-    const transcript = await transcribeAudio(
-      extractedAudio
-    );
-
-    // AI Intelligence
-    const intelligence = await analyzeTranscript(
-      transcript
-    );
-
-    // Viral Detection
-    const viralMoments = await detectViralMoments(
-      transcript
-    );
-
-    // Save Analysis
-    await saveAnalysis(
-  videoId,
-  intelligence ?? "",
-  JSON.stringify(viralMoments),
-  overallScore
+} = await runVideoPipeline(
+  video.file_name
 );
 
-    console.log("================================");
-    console.log("ANALYSIS SAVED");
-    console.log("================================");
 
-    // -----------------------------
-    // GENERATE CLIP
-    // -----------------------------
+console.log("VIDEO PIPELINE COMPLETE");
 
-    const outputName = `clip_${videoId}.mp4`;
+const {
 
-    const generatedClip = await generateClip(
-      videoId,
-      localVideo,
-      0,
-      10,
-      overallScore,
-      outputName
-    );
+  extractedAudio,
 
-    // -----------------------------
-    // UPLOAD CLIP
-    // -----------------------------
+  audioInspection,
 
-    const clipUrl = await uploadClip(outputName);
+} = await runAudioPipeline(
+  localVideo
+);
 
+console.log("AUDIO PIPELINE COMPLETE");
+const {
 
-    console.log("================================");
-    console.log("FIRST CLIP GENERATED");
-    console.log("================================");
+  transcript,
 
-    console.log("PUBLIC URL:", clipUrl);
+  intelligence,
 
-    return {
-      success: true,
-      video,
-      transcript,
-      intelligence,
-      viralMoments,
-      overallScore,
-      generatedClip,
-      savedClip,
-      clipUrl,
-    };
+  viralMoments,
 
+} = await runTranscriptPipeline(
+  extractedAudio
+);
+const overallScore = Math.round(
+  (
+    inspection.qualityScore +
+    audioInspection.audioQuality +
+    inspection.viralPotential
+  ) / 3
+);
+
+console.log("OVERALL SCORE:", overallScore);
+console.log("TRANSCRIPT PIPELINE COMPLETE");
+const {
+
+  scoredClips,
+
+  bestClips,
+
+  generatedClips,
+
+} = await runClipPipeline(
+
+  videoId,
+
+  localVideo,
+
+  viralMoments
+
+);
+
+console.log("CLIP PIPELINE COMPLETE");
+const thumbnail = await runThumbnailPipeline(
+
+  localVideo,
+
+  transcript,
+
+  videoId
+
+);
+
+console.log("THUMBNAIL PIPELINE COMPLETE");
+const database = await runDatabasePipeline(
+
+  videoId,
+
+  intelligence,
+
+  viralMoments,
+
+  overallScore,
+
+  generatedClips[0].clipUrl
+
+);
+
+console.log("DATABASE PIPELINE COMPLETE");
   } catch (error) {
+
     console.error(error);
+
     throw error;
+
   }
+
 }

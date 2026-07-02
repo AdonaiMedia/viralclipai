@@ -1,4 +1,5 @@
 import { cutVideoClip } from "./CutVideoClip";
+import { uploadClip } from "./uploadClip";
 
 export async function generateClip(
   videoId: number,
@@ -8,6 +9,7 @@ export async function generateClip(
   viralScore: number,
   outputName: string
 ) {
+
   const clipPath = await cutVideoClip(
     inputVideo,
     startTime,
@@ -15,11 +17,23 @@ export async function generateClip(
     outputName
   );
 
+  // Upload immediately
+  const clipUrl = await uploadClip(outputName);
+
   return {
+
     videoId,
+
     startTime,
+
     endTime,
+
     viralScore,
+
     clipPath,
+
+    clipUrl,
+
   };
+
 }
