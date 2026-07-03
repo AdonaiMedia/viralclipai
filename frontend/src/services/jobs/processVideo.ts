@@ -1,5 +1,4 @@
 import { supabaseServer } from "@/lib/supabase-server";
-
 import { runVideoPipeline } from "../pipelines/VideoPipeline";
 import { runAudioPipeline } from "../pipelines/AudioPipeline";
 import { runTranscriptPipeline } from "../pipelines/TranscriptPipeline";
@@ -37,7 +36,14 @@ export async function processVideo(videoId: number) {
 
 
 console.log("VIDEO PIPELINE COMPLETE");
+await supabaseServer
+  .from("videos")
+  .update({
+    status: "completed",
+  })
+  .eq("id", videoId);
 
+console.log("VIDEO STATUS UPDATED");
 const {
 
   extractedAudio,
@@ -110,17 +116,26 @@ const database = await runDatabasePipeline(
 
   overallScore,
 
-  generatedClips[0].clipUrl
+  generatedClips
 
 );
 
 console.log("DATABASE PIPELINE COMPLETE");
-  } catch (error) {
+ } catch (error) {
 
-    console.error(error);
+  console.error(error);
 
-    throw error;
+  await supabaseServer
+    .from("videos")
+    .update({
+      status: "failed",
+    })
+    .eq("id", videoId);
 
-  }
+  throw error;
+
+}
+
+  
 
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
-import { processVideo } from "@/services/jobs/processVideo";
+import { processVideo } from "../../../services/jobs/processVideo";
 
 export async function POST(request: Request) {
   try {

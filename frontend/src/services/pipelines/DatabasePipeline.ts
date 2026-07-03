@@ -7,17 +7,19 @@ export async function runDatabasePipeline(
 
   intelligence: string,
 
-  viralMoments: any,
+  viralMoments: any[],
 
   overallScore: number,
 
-  clipUrl: string
+  generatedClips: any[]
 
 ) {
 
   console.log("================================");
   console.log("DATABASE PIPELINE");
   console.log("================================");
+
+  // Save AI Analysis
 
   await saveAnalysis(
 
@@ -31,23 +33,33 @@ export async function runDatabasePipeline(
 
   );
 
-  const savedClip = await saveClip(
+  // Save Every Clip
 
-    videoId,
+  const savedClips = [];
 
-    0,
+  for (const clip of generatedClips) {
 
-    10,
+    const saved = await saveClip(
 
-    clipUrl,
+      videoId,
 
-    overallScore
+      clip.startTime,
 
-  );
+      clip.endTime,
+
+      clip.clipUrl,
+
+      clip.viralScore
+
+    );
+
+    savedClips.push(saved);
+
+  }
 
   return {
 
-    savedClip,
+    savedClips,
 
   };
 
