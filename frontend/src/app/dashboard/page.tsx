@@ -8,6 +8,7 @@ import UploadCard from "@/components/dashboard/UploadCard";
 import VideosList from "@/components/dashboard/VideosList";
 import StatsCards from "@/components/dashboard/StatsCards";
 
+import { getDashboardData } from "@/services/dashboard/GetDashboardData";
 import { getDashboardStats } from "@/services/dashboard/GetDashboardStats";
 
 export default function Dashboard() {
@@ -17,46 +18,34 @@ export default function Dashboard() {
   const [videos, setVideos] = useState<any[]>([]);
 
   const [stats, setStats] = useState({
+
     totalVideos: 0,
+
     totalClips: 0,
+
     averageScore: 0,
+
     completedVideos: 0,
+
   });
 
   useEffect(() => {
+
     loadDashboard();
+
   }, []);
 
   async function loadDashboard() {
 
-    await loadVideos();
+    const dashboardData =
+      await getDashboardData();
+
+    setVideos(dashboardData);
 
     const dashboardStats =
       await getDashboardStats();
 
     setStats(dashboardStats);
-
-  }
-
-  async function loadVideos() {
-
-    const { data, error } =
-      await supabase
-        .from("videos")
-        .select("*")
-        .order("created_at", {
-          ascending: false,
-        });
-
-    if (error) {
-
-      console.log(error);
-
-      return;
-
-    }
-
-    setVideos(data || []);
 
   }
 
@@ -92,11 +81,17 @@ export default function Dashboard() {
       await supabase
         .from("videos")
         .insert([
+
           {
+
             file_name: fileName,
+
             file_url: fileName,
+
             status: "uploaded",
+
           },
+
         ]);
 
     if (dbError) {
@@ -121,12 +116,17 @@ export default function Dashboard() {
   ) {
 
     await supabase.storage
+
       .from("videos")
+
       .remove([fileName]);
 
     await supabase
+
       .from("videos")
+
       .delete()
+
       .eq("id", id);
 
     loadDashboard();
@@ -143,11 +143,15 @@ export default function Dashboard() {
         method: "POST",
 
         headers: {
+
           "Content-Type": "application/json",
+
         },
 
         body: JSON.stringify({
+
           videoId: id,
+
         }),
 
       });
@@ -172,15 +176,23 @@ export default function Dashboard() {
       </h1>
 
       <StatsCards
+
         totalVideos={stats.totalVideos}
+
         totalClips={stats.totalClips}
+
         averageScore={stats.averageScore}
+
         completedVideos={stats.completedVideos}
+
       />
 
       <UploadCard
+
         onUpload={uploadVideo}
+
         onSelectFile={setFile}
+
       />
 
       <div className="bg-slate-800 p-6 rounded-xl mt-8">
@@ -192,9 +204,13 @@ export default function Dashboard() {
         </h2>
 
         <VideosList
+
           videos={videos}
+
           onDelete={deleteVideo}
+
           onGenerate={generateClip}
+
         />
 
       </div>

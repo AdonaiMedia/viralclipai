@@ -1,59 +1,175 @@
 "use client";
 
 interface VideoCardProps {
+
   video: any;
+
+  analysis?: any;
+
+  clips?: any[];
+
+  thumbnail?: string;
+
   publicUrl: string;
+
   onDelete: () => void;
+
   onGenerate: () => void;
+
 }
 
 export default function VideoCard({
+
   video,
+
+  analysis,
+
+  clips,
+
+  thumbnail,
+
   publicUrl,
+
   onDelete,
+
   onGenerate,
+
 }: VideoCardProps) {
+
   return (
-    <li className="mb-6 border border-slate-600 rounded-lg p-4">
 
-      <p className="font-bold mb-2">
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg">
+
+      <h2 className="text-xl font-bold mb-4">
+
         📹 {video.file_name}
-      </p>
 
-      <p className="text-yellow-400">
-        Status: {video.status}
-      </p>
+      </h2>
 
-      <p className="text-xs text-green-400 break-all">
-        {publicUrl}
-      </p>
+      <div className="grid grid-cols-2 gap-4 mb-4">
+
+        <div>
+
+          <p className="text-gray-400">
+
+            Status
+
+          </p>
+
+          <p className="text-green-400 font-bold">
+
+            {video.status}
+
+          </p>
+
+        </div>
+
+        <div>
+
+          <p className="text-gray-400">
+
+            Viral Score
+
+          </p>
+
+          <p className="text-yellow-400 text-2xl font-bold">
+
+            {analysis?.overall_score ?? "--"}
+
+          </p>
+
+        </div>
+
+      </div>
+
+      {thumbnail && (
+
+        <img
+
+          src={thumbnail}
+
+          alt="Thumbnail"
+
+          className="rounded-lg mb-4"
+
+        />
+
+      )}
 
       <video
+
         controls
-        width="400"
-        className="rounded mt-3"
+
+        className="rounded-lg w-full mb-4"
+
       >
+
         <source src={publicUrl} />
+
       </video>
 
-      <div className="flex gap-4 mt-4">
+      <div className="mb-4">
+
+        <h3 className="font-bold">
+
+          AI Analysis
+
+        </h3>
+
+        <pre className="text-sm whitespace-pre-wrap text-slate-300">
+
+          {analysis?.intelligence ?? "No analysis available"}
+
+        </pre>
+
+      </div>
+
+      <div className="mb-4">
+
+        <h3 className="font-bold">
+
+          Generated Clips
+
+        </h3>
+
+        <p>
+
+          {clips?.length ?? 0} Clips
+
+        </p>
+
+      </div>
+
+      <div className="flex gap-3">
 
         <button
-          onClick={onDelete}
-          className="bg-red-600 px-4 py-2 rounded-lg"
+
+          onClick={onGenerate}
+
+          className="bg-green-600 px-4 py-2 rounded-lg"
+
         >
-          🗑 Delete Video
+
+          🚀 Generate
+
         </button>
 
         <button
-          onClick={onGenerate}
-          className="bg-green-600 px-4 py-2 rounded-lg"
+
+          onClick={onDelete}
+
+          className="bg-red-600 px-4 py-2 rounded-lg"
+
         >
-          ✂ Generate Clip
+
+          🗑 Delete
+
         </button>
 
       </div>
 
-    </li>
+    </div>
+
   );
+
 }
