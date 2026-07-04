@@ -1,9 +1,9 @@
-import { supabaseServer } from "@/lib/supabase-server";
+import { supabase } from "@/lib/supabase";
 
 export async function getDashboardStats() {
 
   const { count: totalVideos } =
-    await supabaseServer
+    await supabase
       .from("videos")
       .select("*", {
         count: "exact",
@@ -11,7 +11,7 @@ export async function getDashboardStats() {
       });
 
   const { count: totalClips } =
-    await supabaseServer
+    await supabase
       .from("clips")
       .select("*", {
         count: "exact",
@@ -19,7 +19,7 @@ export async function getDashboardStats() {
       });
 
   const { data: analysis } =
-    await supabaseServer
+    await supabase
       .from("viral_analysis")
       .select("overall_score");
 
@@ -34,7 +34,7 @@ export async function getDashboardStats() {
       : 0;
 
   const { count: completedVideos } =
-    await supabaseServer
+    await supabase
       .from("videos")
       .select("*", {
         count: "exact",

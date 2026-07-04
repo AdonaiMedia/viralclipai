@@ -1,8 +1,8 @@
-import { supabaseServer } from "@/lib/supabase-server";
+import { supabase } from "@/lib/supabase";
 
 export async function getDashboardData() {
 
-  const { data: videos, error } = await supabaseServer
+  const { data: videos, error } = await supabase
     .from("videos")
     .select("*")
     .order("created_at", { ascending: false });
@@ -13,7 +13,7 @@ export async function getDashboardData() {
 
   for (const video of videos || []) {
 
-    const { data: analyses } = await supabaseServer
+    const { data: analyses } = await supabase
       .from("viral_analysis")
       .select("*")
       .eq("video_id", video.id)
@@ -24,7 +24,7 @@ export async function getDashboardData() {
         ? analyses[0]
         : null;
 
-    const { data: clips } = await supabaseServer
+    const { data: clips } = await supabase
       .from("clips")
       .select("*")
       .eq("video_id", video.id)
