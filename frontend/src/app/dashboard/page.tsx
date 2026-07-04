@@ -59,6 +59,20 @@ export default function Dashboard() {
 
     }
 
+    const {
+
+      data: { user },
+
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+
+      alert("Please login first.");
+
+      return;
+
+    }
+
     const fileName =
       `${Date.now()}-${file.name}`;
 
@@ -83,6 +97,8 @@ export default function Dashboard() {
         .insert([
 
           {
+
+            user_id: user.id,
 
             file_name: fileName,
 
@@ -111,8 +127,11 @@ export default function Dashboard() {
   }
 
   async function deleteVideo(
+
     fileName: string,
+
     id: number
+
   ) {
 
     await supabase.storage
@@ -134,7 +153,9 @@ export default function Dashboard() {
   }
 
   async function generateClip(
+
     id: number
+
   ) {
 
     const response =
@@ -164,53 +185,36 @@ export default function Dashboard() {
     loadDashboard();
 
   }
-
-  return (
+    return (
 
     <main className="min-h-screen bg-slate-900 text-white p-10">
 
       <h1 className="text-4xl font-bold mb-8">
-
         ViralClip AI Dashboard
-
       </h1>
 
       <StatsCards
-
         totalVideos={stats.totalVideos}
-
         totalClips={stats.totalClips}
-
         averageScore={stats.averageScore}
-
         completedVideos={stats.completedVideos}
-
       />
 
       <UploadCard
-
         onUpload={uploadVideo}
-
         onSelectFile={setFile}
-
       />
 
       <div className="bg-slate-800 p-6 rounded-xl mt-8">
 
         <h2 className="text-2xl font-bold mb-6">
-
           My Videos
-
         </h2>
 
         <VideosList
-
           videos={videos}
-
           onDelete={deleteVideo}
-
           onGenerate={generateClip}
-
         />
 
       </div>
