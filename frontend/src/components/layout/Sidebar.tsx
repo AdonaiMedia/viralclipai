@@ -10,6 +10,11 @@ const menu = [
     icon: "📊",
   },
   {
+  name: "Workspace",
+  href: "/workspace",
+  icon: "🧠",
+  },
+  {
     name: "Videos",
     href: "/videos",
     icon: "🎥",
