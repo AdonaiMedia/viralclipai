@@ -1,52 +1,47 @@
 "use client";
 
-interface UploadCardProps {
+interface Props {
+  onSelectFile: (file: File) => void;
   onUpload: () => void;
-  onSelectFile: (file: File | null) => void;
 }
 
 export default function UploadCard({
-
-  onUpload,
-
   onSelectFile,
-
-}: UploadCardProps) {
-
+  onUpload,
+}: Props) {
   return (
+    <div className="bg-slate-800 p-6 rounded-xl mb-8">
 
-    <div className="bg-slate-800 p-6 rounded-xl">
-
-      <h2 className="text-2xl font-bold mb-4">
-
-        Upload Your Video
-
+      <h2 className="text-2xl font-bold mb-6">
+        Upload Video
       </h2>
 
+      <label
+        htmlFor="video-upload"
+        className="cursor-pointer inline-block bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold"
+      >
+        📁 Choose Video
+      </label>
+
       <input
+        id="video-upload"
         type="file"
         accept="video/*"
+        className="hidden"
         onChange={(e) => {
-
-          onSelectFile(
-            e.target.files?.[0] || null
-          );
-
+          if (e.target.files?.[0]) {
+            onSelectFile(e.target.files[0]);
+          }
         }}
-        className="mb-4"
       />
-
-      <br />
 
       <button
         onClick={onUpload}
-        className="bg-blue-600 px-6 py-3 rounded-lg"
+        className="ml-4 bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-semibold"
       >
-        Upload Video
+        🚀 Upload Video
       </button>
 
     </div>
-
   );
-
 }
