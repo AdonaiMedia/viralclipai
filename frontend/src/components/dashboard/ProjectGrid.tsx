@@ -39,13 +39,12 @@ export default function ProjectGrid({
       {projects.map((project) => (
 
         <ProjectCard
-          key={project.id}
-          project={project}
-          onOpen={onOpen}
-          onGenerate={onGenerate}
-          onPublish={onPublish}
-          onDelete={onDelete}
-        />
+  key={project.id}
+  project={project}
+  onGenerate={onGenerate}
+  onPublish={onPublish}
+  onDelete={onDelete}
+/>
 
       ))}
 

@@ -1,10 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Project } from "@/types/Project";
 
 interface ProjectCardProps {
   project: Project;
-  onOpen?: (id: number) => void;
   onGenerate?: (id: number) => void;
   onPublish?: (id: number) => void;
   onDelete?: (id: number) => void;
@@ -21,13 +21,13 @@ const statusColors = {
 
 export default function ProjectCard({
   project,
-  onOpen,
   onGenerate,
   onPublish,
   onDelete,
 }: ProjectCardProps) {
-  const score =
-    project.analysis?.overallScore ?? "--";
+  const router = useRouter();
+
+  const score = project.analysis?.overallScore ?? "--";
 
   return (
     <div className="rounded-2xl border border-slate-700 bg-slate-800 overflow-hidden shadow-lg hover:border-cyan-500 transition">
@@ -89,15 +89,13 @@ export default function ProjectCard({
         <div className="mt-5 text-sm text-slate-400">
           Created
           <br />
-          {new Date(
-            project.video.createdAt
-          ).toLocaleDateString()}
+          {new Date(project.video.createdAt).toLocaleDateString()}
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-3">
 
           <button
-            onClick={() => onOpen?.(project.id)}
+            onClick={() => router.push(`/project/${project.id}`)}
             className="rounded-lg bg-cyan-600 px-4 py-2 font-semibold hover:bg-cyan-700"
           >
             Open
