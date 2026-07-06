@@ -1,8 +1,9 @@
 import { supabase } from "@/lib/supabase";
+import { DashboardStats } from "@/types/Dashboard";
 
-export async function getDashboardStats() {
+export async function getDashboardStats(): Promise<DashboardStats> {
 
-  const { count: totalVideos } =
+  const { count: totalVideos, error: videoError } =
     await supabase
       .from("videos")
       .select("*", {
@@ -10,7 +11,9 @@ export async function getDashboardStats() {
         head: true,
       });
 
-  const { count: totalClips } =
+  if (videoError) throw videoError;
+
+  const { count: totalClips, error: clipError } =
     await supabase
       .from("clips")
       .select("*", {
@@ -18,10 +21,14 @@ export async function getDashboardStats() {
         head: true,
       });
 
-  const { data: analysis } =
+  if (clipError) throw clipError;
+
+  const { data: analysis, error: analysisError } =
     await supabase
       .from("viral_analysis")
       .select("overall_score");
+
+  if (analysisError) throw analysisError;
 
   const averageScore =
     analysis && analysis.length > 0
@@ -33,7 +40,7 @@ export async function getDashboardStats() {
         )
       : 0;
 
-  const { count: completedVideos } =
+  const { count: completedVideos, error: completedError } =
     await supabase
       .from("videos")
       .select("*", {
@@ -42,16 +49,13 @@ export async function getDashboardStats() {
       })
       .eq("status", "completed");
 
+  if (completedError) throw completedError;
+
   return {
-
-    totalVideos: totalVideos || 0,
-
-    totalClips: totalClips || 0,
-
+    totalVideos: totalVideos ?? 0,
+    totalClips: totalClips ?? 0,
     averageScore,
-
-    completedVideos: completedVideos || 0,
-
+    completedVideos: completedVideos ?? 0,
   };
 
 }

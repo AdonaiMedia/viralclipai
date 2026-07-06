@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase-server";
+
 import { runVideoPipeline } from "../pipelines/VideoPipeline";
 import { runAudioPipeline } from "../pipelines/AudioPipeline";
 import { runTranscriptPipeline } from "../pipelines/TranscriptPipeline";
@@ -7,135 +8,134 @@ import { runThumbnailPipeline } from "../pipelines/ThumbnailPipeline";
 import { runDatabasePipeline } from "../pipelines/DatabasePipeline";
 
 export async function processVideo(videoId: number) {
-
   try {
-
     console.log("================================");
     console.log("VIRALCLIP AI ENGINE");
     console.log("================================");
 
-    const { data: video, error } =
-      await supabaseServer
-        .from("videos")
-        .select("*")
-        .eq("id", videoId)
-        .single();
+    const { data: video, error } = await supabaseServer
+      .from("videos")
+      .select("*")
+      .eq("id", videoId)
+      .single();
 
     if (error) throw error;
 
     console.log("VIDEO:", video);
+
+    // Processing
+    await supabaseServer
+      .from("videos")
+      .update({
+        status: "processing",
+      })
+      .eq("id", videoId);
+
     const {
+      localVideo,
+      inspection,
+    } = await runVideoPipeline(video.file_name);
 
-  localVideo,
+    console.log("✅ VIDEO PIPELINE COMPLETE");
 
-  inspection,
+    const {
+      extractedAudio,
+      audioInspection,
+    } = await runAudioPipeline(localVideo);
 
-} = await runVideoPipeline(
-  video.file_name
-);
+    console.log("✅ AUDIO PIPELINE COMPLETE");
 
+    // Analyzing
+    await supabaseServer
+      .from("videos")
+      .update({
+        status: "analyzing",
+      })
+      .eq("id", videoId);
 
-console.log("VIDEO PIPELINE COMPLETE");
-await supabaseServer
-  .from("videos")
-  .update({
-    status: "completed",
-  })
-  .eq("id", videoId);
+    const {
+      transcript,
+      intelligence,
+      viralMoments,
+    } = await runTranscriptPipeline(extractedAudio);
 
-console.log("VIDEO STATUS UPDATED");
-const {
+    console.log("✅ TRANSCRIPT PIPELINE COMPLETE");
 
-  extractedAudio,
+    const overallScore = Math.round(
+      (
+        inspection.qualityScore +
+        audioInspection.audioQuality +
+        inspection.viralPotential
+      ) / 3
+    );
 
-  audioInspection,
+    console.log("OVERALL SCORE:", overallScore);
 
-} = await runAudioPipeline(
-  localVideo
-);
+    // Generating
+    await supabaseServer
+      .from("videos")
+      .update({
+        status: "generating",
+      })
+      .eq("id", videoId);
 
-console.log("AUDIO PIPELINE COMPLETE");
-const {
+    const {
+      scoredClips,
+      bestClips,
+      generatedClips,
+    } = await runClipPipeline(
+      videoId,
+      localVideo,
+      viralMoments
+    );
 
-  transcript,
+    console.log("✅ CLIP PIPELINE COMPLETE");
 
-  intelligence,
+    await runThumbnailPipeline(
+      localVideo,
+      transcript,
+      videoId
+    );
 
-  viralMoments,
+    console.log("✅ THUMBNAIL PIPELINE COMPLETE");
 
-} = await runTranscriptPipeline(
-  extractedAudio
-);
-const overallScore = Math.round(
-  (
-    inspection.qualityScore +
-    audioInspection.audioQuality +
-    inspection.viralPotential
-  ) / 3
-);
+    await runDatabasePipeline(
+      videoId,
+      intelligence,
+      viralMoments,
+      overallScore,
+      generatedClips
+    );
 
-console.log("OVERALL SCORE:", overallScore);
-console.log("TRANSCRIPT PIPELINE COMPLETE");
-const {
+    console.log("✅ DATABASE PIPELINE COMPLETE");
 
-  scoredClips,
+    // Completed
+    await supabaseServer
+      .from("videos")
+      .update({
+        status: "completed",
+      })
+      .eq("id", videoId);
 
-  bestClips,
+    console.log("STATUS: COMPLETED");
 
-  generatedClips,
+    return {
+      success: true,
+      overallScore,
+      clipsGenerated: generatedClips.length,
+      scoredClips,
+      bestClips,
+    };
+  } catch (error) {
+    console.error("PROCESS VIDEO ERROR:", error);
 
-} = await runClipPipeline(
+    await supabaseServer
+      .from("videos")
+      .update({
+        status: "failed",
+      })
+      .eq("id", videoId);
 
-  videoId,
-
-  localVideo,
-
-  viralMoments
-
-);
-
-console.log("CLIP PIPELINE COMPLETE");
-const thumbnail = await runThumbnailPipeline(
-
-  localVideo,
-
-  transcript,
-
-  videoId
-
-);
-
-console.log("THUMBNAIL PIPELINE COMPLETE");
-const database = await runDatabasePipeline(
-
-  videoId,
-
-  intelligence,
-
-  viralMoments,
-
-  overallScore,
-
-  generatedClips
-
-);
-
-console.log("DATABASE PIPELINE COMPLETE");
- } catch (error) {
-
-  console.error(error);
-
-  await supabaseServer
-    .from("videos")
-    .update({
-      status: "failed",
-    })
-    .eq("id", videoId);
-
-  throw error;
-
-}
-
-  
-
+    throw error;
+  }
 }

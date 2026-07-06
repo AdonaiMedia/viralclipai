@@ -1,8 +1,8 @@
 "use client";
 
 import { supabase } from "@/lib/supabase";
-import VideoCard from "./VideoCard";
 import { DashboardVideo } from "@/types/Dashboard";
+import VideoCard from "./VideoCard";
 
 interface VideosListProps {
   videos: DashboardVideo[];
@@ -15,46 +15,40 @@ export default function VideosList({
   onDelete,
   onGenerate,
 }: VideosListProps) {
-
   if (videos.length === 0) {
     return (
-      <p className="text-gray-400">
-        No videos uploaded yet
-      </p>
+      <div className="rounded-lg border border-dashed border-gray-700 p-8 text-center">
+        <p className="text-gray-400">
+          No videos uploaded yet.
+        </p>
+      </div>
     );
   }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
       {videos.map((item) => {
-
         const { data } = supabase.storage
           .from("videos")
           .getPublicUrl(item.video.file_url);
 
         return (
           <VideoCard
-            key={item.video.id}
+            key={item.id}
             video={item.video}
             analysis={item.analysis}
             clips={item.clips}
-            thumbnail={item.thumbnail}
+            thumbnail={item.thumbnail ?? ""}
             publicUrl={data.publicUrl}
             onDelete={() =>
-              onDelete(
-                item.video.file_name,
-                item.video.id
-              )
+              onDelete(item.video.file_name, item.video.id)
             }
             onGenerate={() =>
               onGenerate(item.video.id)
             }
           />
         );
-
       })}
-
     </div>
   );
 }
