@@ -1,5 +1,5 @@
 import { supabaseServer } from "@/lib/supabase-server";
-
+import {  emitProcessingEvent,} from "@/services/events";
 import { runVideoPipeline } from "../pipelines/VideoPipeline";
 import { runAudioPipeline } from "../pipelines/AudioPipeline";
 import { runTranscriptPipeline } from "../pipelines/TranscriptPipeline";
@@ -23,6 +23,13 @@ export async function processVideo(videoId: number) {
 
     console.log("VIDEO:", video);
 
+    await emitProcessingEvent({
+  stage: "upload",
+  progress: 10,
+  message: "Video uploaded successfully.",
+  createdAt: new Date(),
+});
+
     // Processing
     await supabaseServer
       .from("videos")
@@ -37,6 +44,13 @@ export async function processVideo(videoId: number) {
     } = await runVideoPipeline(video.file_name);
 
     console.log("✅ VIDEO PIPELINE COMPLETE");
+
+    await emitProcessingEvent({
+  stage: "inspection",
+  progress: 25,
+  message: "Video inspection completed.",
+  createdAt: new Date(),
+});
 
     const {
       extractedAudio,
@@ -61,6 +75,13 @@ export async function processVideo(videoId: number) {
 
     console.log("✅ TRANSCRIPT PIPELINE COMPLETE");
 
+    await emitProcessingEvent({
+  stage: "transcription",
+  progress: 45,
+  message: "Transcript generated.",
+  createdAt: new Date(),
+});
+
     const overallScore = Math.round(
       (
         inspection.qualityScore +
@@ -70,6 +91,13 @@ export async function processVideo(videoId: number) {
     );
 
     console.log("OVERALL SCORE:", overallScore);
+
+    await emitProcessingEvent({
+  stage: "analysis",
+  progress: 60,
+  message: "AI analysis completed.",
+  createdAt: new Date(),
+});
 
     // Generating
     await supabaseServer
@@ -91,6 +119,13 @@ export async function processVideo(videoId: number) {
 
     console.log("✅ CLIP PIPELINE COMPLETE");
 
+    await emitProcessingEvent({
+  stage: "clips",
+  progress: 80,
+  message: "AI clips generated.",
+  createdAt: new Date(),
+});
+
     await runThumbnailPipeline(
       localVideo,
       transcript,
@@ -98,6 +133,13 @@ export async function processVideo(videoId: number) {
     );
 
     console.log("✅ THUMBNAIL PIPELINE COMPLETE");
+
+    await emitProcessingEvent({
+  stage: "thumbnails",
+  progress: 95,
+  message: "AI thumbnails generated.",
+  createdAt: new Date(),
+});
 
     await runDatabasePipeline(
       videoId,
@@ -120,12 +162,19 @@ export async function processVideo(videoId: number) {
     console.log("STATUS: COMPLETED");
 
     return {
+      
       success: true,
       overallScore,
       clipsGenerated: generatedClips.length,
       scoredClips,
       bestClips,
     };
+    await emitProcessingEvent({
+  stage: "completed",
+  progress: 100,
+  message: "Processing completed successfully.",
+  createdAt: new Date(),
+});
   } catch (error) {
     console.error("PROCESS VIDEO ERROR:", error);
 
