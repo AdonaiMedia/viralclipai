@@ -1,3 +1,4 @@
+import { saveProcessingProgress } from "../database/saveProcessingProgress";
 import { supabaseServer } from "@/lib/supabase-server";
 import {  emitProcessingEvent,} from "@/services/events";
 import { runVideoPipeline } from "../pipelines/VideoPipeline";
@@ -13,6 +14,12 @@ export async function processVideo(videoId: number) {
     console.log("VIRALCLIP AI ENGINE");
     console.log("================================");
 
+    await saveProcessingProgress(
+  videoId,
+  "upload",
+  5,
+  "Initializing AI Engine..."
+);
     const { data: video, error } = await supabaseServer
       .from("videos")
       .select("*")
@@ -45,6 +52,12 @@ export async function processVideo(videoId: number) {
 
     console.log("✅ VIDEO PIPELINE COMPLETE");
 
+    await saveProcessingProgress(
+  videoId,
+  "inspection",
+  15,
+  "Inspecting video quality..."
+);
     await emitProcessingEvent({
   stage: "inspection",
   progress: 25,
@@ -58,7 +71,12 @@ export async function processVideo(videoId: number) {
     } = await runAudioPipeline(localVideo);
 
     console.log("✅ AUDIO PIPELINE COMPLETE");
-
+await saveProcessingProgress(
+  videoId,
+  "audio",
+  30,
+  "Analyzing audio..."
+);
     // Analyzing
     await supabaseServer
       .from("videos")
@@ -74,7 +92,12 @@ export async function processVideo(videoId: number) {
     } = await runTranscriptPipeline(extractedAudio);
 
     console.log("✅ TRANSCRIPT PIPELINE COMPLETE");
-
+await saveProcessingProgress(
+  videoId,
+  "transcription",
+  50,
+  "Understanding speech..."
+);
     await emitProcessingEvent({
   stage: "transcription",
   progress: 45,
@@ -91,7 +114,12 @@ export async function processVideo(videoId: number) {
     );
 
     console.log("OVERALL SCORE:", overallScore);
-
+await saveProcessingProgress(
+  videoId,
+  "analysis",
+  65,
+  "Finding viral moments..."
+);
     await emitProcessingEvent({
   stage: "analysis",
   progress: 60,
@@ -118,7 +146,12 @@ export async function processVideo(videoId: number) {
     );
 
     console.log("✅ CLIP PIPELINE COMPLETE");
-
+await saveProcessingProgress(
+  videoId,
+  "clips",
+  80,
+  "Generating clips..."
+);
     await emitProcessingEvent({
   stage: "clips",
   progress: 80,
@@ -133,7 +166,12 @@ export async function processVideo(videoId: number) {
     );
 
     console.log("✅ THUMBNAIL PIPELINE COMPLETE");
-
+await saveProcessingProgress(
+  videoId,
+  "thumbnail",
+  90,
+  "Creating thumbnails..."
+);
     await emitProcessingEvent({
   stage: "thumbnails",
   progress: 95,
@@ -150,7 +188,12 @@ export async function processVideo(videoId: number) {
     );
 
     console.log("✅ DATABASE PIPELINE COMPLETE");
-
+await saveProcessingProgress(
+  videoId,
+  "database",
+  97,
+  "Saving results..."
+);
     // Completed
     await supabaseServer
       .from("videos")
@@ -169,6 +212,12 @@ export async function processVideo(videoId: number) {
       scoredClips,
       bestClips,
     };
+    await saveProcessingProgress(
+  videoId,
+  "completed",
+  100,
+  "Finished successfully."
+);
     await emitProcessingEvent({
   stage: "completed",
   progress: 100,

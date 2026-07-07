@@ -2,6 +2,7 @@
 
 import { useProject } from "@/providers/ProjectProvider";
 import AnalysisScoreCard from "./AnalysisScoreCard";
+
 export default function ProjectOverview() {
 
   const {
@@ -85,10 +86,13 @@ export default function ProjectOverview() {
 
       <div className="mt-8">
 
+        <AnalysisScoreCard />
+
+      </div>
+
+      <div className="mt-8">
+
         <h3 className="text-xl font-bold mb-3">
-            <div className="mt-8">
-  <AnalysisScoreCard />
-</div>
           AI Analysis
         </h3>
 

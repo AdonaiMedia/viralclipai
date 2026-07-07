@@ -8,11 +8,11 @@ export default function ProjectHeader() {
 
   return (
 
-    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-6">
+    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-6 mb-8">
 
       <div>
 
-        <h1 className="text-4xl font-bold">
+        <h1 className="text-4xl font-bold text-white">
 
           {loading
             ? "Loading..."
@@ -22,36 +22,42 @@ export default function ProjectHeader() {
 
         <p className="text-slate-400 mt-2">
 
-          AI Content Workspace
+          ViralClip AI • Creator Workspace
 
         </p>
 
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-wrap items-center gap-4">
 
-        <div className="bg-slate-800 rounded-lg px-4 py-2">
+        <div className="bg-slate-800 border border-slate-700 rounded-xl px-5 py-3">
 
-          <span className="text-slate-400 text-sm">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+
             Status
-          </span>
 
-          <p className="font-semibold">
+          </p>
+
+          <p className="font-semibold capitalize text-white">
+
             {project?.video.status ?? "--"}
+
           </p>
 
         </div>
 
-        <button className="bg-cyan-600 hover:bg-cyan-700 px-5 py-2 rounded-lg font-semibold transition">
-
+        <button
+          className="bg-emerald-600 hover:bg-emerald-700 transition px-5 py-3 rounded-xl font-semibold"
+          type="button"
+        >
           Publish
-
         </button>
 
-        <button className="bg-green-600 hover:bg-green-700 px-5 py-2 rounded-lg font-semibold transition">
-
-          Generate
-
+        <button
+          className="bg-cyan-600 hover:bg-cyan-700 transition px-5 py-3 rounded-xl font-semibold"
+          type="button"
+        >
+          Generate AI
         </button>
 
       </div>
