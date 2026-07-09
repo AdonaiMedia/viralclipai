@@ -1,120 +1,118 @@
-import { Mission } from "./Mission";
-import { Task } from "./Task";
+import type { Mission } from "./Mission";
+import type { Task } from "./Task";
+
+import { MemoryManager } from "./memory";
 
 export class MissionPlanner {
-  plan(mission: Mission): Task[] {
+  constructor(
+    private memory?: MemoryManager
+  ) {}
+
+  plan(
+    mission: Mission
+  ): Task[] {
+
+    const tasks: Task[] = [];
+
     switch (mission.type) {
-      case "clips":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Analyze Video",
-            agent: "analysis",
-            payload: mission.payload,
-            completed: false,
-          },
-          {
-            id: crypto.randomUUID(),
-            name: "Generate Clips",
-            agent: "clip",
-            payload: mission.payload,
-            completed: false,
-          },
-          {
-            id: crypto.randomUUID(),
-            name: "Generate Titles",
-            agent: "title",
-            payload: mission.payload,
-            completed: false,
-          },
-          {
-            id: crypto.randomUUID(),
-            name: "Generate Thumbnail",
-            agent: "thumbnail",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
 
-      case "analysis":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Analyze Video",
-            agent: "analysis",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
+      case "analysis": {
 
-      case "recap":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Create Recap",
-            agent: "recap",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
+        const analysisId = crypto.randomUUID();
+        const thumbnailId = crypto.randomUUID();
+        const titleId = crypto.randomUUID();
 
-      case "translation":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Translate Content",
-            agent: "translation",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
+        tasks.push({
+          id: analysisId,
+          agent: "analysis",
+          name: "Analyze Video",
+          payload: mission.payload,
+          completed: false,
+        });
 
-      case "voice-clone":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Clone Voice",
-            agent: "voice",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
+        tasks.push({
+          id: thumbnailId,
+          agent: "thumbnail",
+          name: "Generate Thumbnail",
+          payload: mission.payload,
+          completed: false,
+          dependsOn: [analysisId],
+        });
 
-      case "lip-sync":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Generate Lip Sync",
-            agent: "lipsync",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
+        tasks.push({
+          id: titleId,
+          agent: "title",
+          name: "Generate Title",
+          payload: mission.payload,
+          completed: false,
+          dependsOn: [analysisId],
+        });
 
-      case "thumbnail":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Generate Thumbnail",
-            agent: "thumbnail",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
+        break;
+      }
 
-      case "publishing":
-        return [
-          {
-            id: crypto.randomUUID(),
-            name: "Publish Content",
-            agent: "publishing",
-            payload: mission.payload,
-            completed: false,
-          },
-        ];
+      case "clips": {
+
+        const clipId = crypto.randomUUID();
+        const captionId = crypto.randomUUID();
+        const publishId = crypto.randomUUID();
+
+        tasks.push({
+          id: clipId,
+          agent: "clip",
+          name: "Generate Clips",
+          payload: mission.payload,
+          completed: false,
+        });
+
+        tasks.push({
+          id: captionId,
+          agent: "caption",
+          name: "Generate Captions",
+          payload: mission.payload,
+          completed: false,
+          dependsOn: [clipId],
+        });
+
+        tasks.push({
+          id: publishId,
+          agent: "publishing",
+          name: "Publish Content",
+          payload: mission.payload,
+          completed: false,
+          dependsOn: [clipId, captionId],
+        });
+
+        break;
+      }
 
       default:
-        return [];
+        break;
     }
+
+    if (this.memory) {
+
+      const summary =
+        this.memory.getSummary();
+
+      if (summary.averageProjectScore < 70) {
+
+        tasks.push({
+          id: crypto.randomUUID(),
+          agent: "coach",
+          name: "AI Coach Review",
+          payload: {
+            reason: "Low viral score",
+          },
+          completed: false,
+        });
+
+      }
+
+    }
+
+    return tasks;
+
   }
+
 }

@@ -7,10 +7,8 @@ export const processingBus =
 export async function emitProcessingEvent(
   event: ProcessingEvent
 ) {
-
   await processingBus.emit(
-    "mission.started",
+    "processing.updated",
     event
   );
-
 }

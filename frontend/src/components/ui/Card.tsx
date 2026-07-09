@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 
-interface Props {
+interface CardProps {
   children: ReactNode;
   className?: string;
 }
@@ -10,22 +10,12 @@ interface Props {
 export default function Card({
   children,
   className = "",
-}: Props) {
-
+}: CardProps) {
   return (
     <div
-      className={`
-        bg-slate-800
-        border
-        border-slate-700
-        rounded-2xl
-        p-6
-        shadow-lg
-        ${className}
-      `}
+      className={`rounded-2xl border border-slate-800 bg-slate-900 shadow-lg ${className}`}
     >
       {children}
     </div>
   );
-
 }

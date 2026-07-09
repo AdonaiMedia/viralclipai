@@ -1,5 +1,7 @@
 "use client";
-
+import PublishingCenter from "@/components/workspace/PublishingCenter";
+import AIDirectorPanel from "@/components/workspace/AIDirectorPanel";
+import ThumbnailStudio from "@/components/workspace/ThumbnailStudio";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import MissionTimeline from "@/components/workspace/MissionTimeline";
 import Section from "@/components/ui/Section";
@@ -18,10 +20,57 @@ const workflowSteps = [
   { name: "Thumbnail Generation", completed: false },
   { name: "Publishing Ready", completed: false },
 ];
-  return (
+ const thumbnails = [
+  {
+    id: 1,
+    image: "https://placehold.co/600x400",
+    score: 95,
+    recommended: true,
+  },
+  {
+    id: 2,
+    image: "https://placehold.co/600x400",
+    score: 90,
+  },
+  {
+    id: 3,
+    image: "https://placehold.co/600x400",
+    score: 87,
+  },
+];
+const directorReport = [
+  {
+    id: 1,
+    message: "Lighting is excellent.",
+  },
+  {
+    id: 2,
+    message: "Move camera slightly closer.",
+  },
+  {
+    id: 3,
+    message: "Thumbnail #2 has the highest predicted CTR.",
+  },
+  {
+    id: 4,
+    message: "Best platform: YouTube Shorts.",
+  },
+];
+const platforms = [
+  { id: "youtube", name: "YouTube", connected: true },
+  { id: "facebook", name: "Facebook", connected: false },
+  { id: "instagram", name: "Instagram", connected: false },
+  { id: "tiktok", name: "TikTok", connected: false },
+  { id: "threads", name: "Threads", connected: false },
+  { id: "x", name: "X", connected: false },
+  { id: "linkedin", name: "LinkedIn", connected: false },
+  { id: "pinterest", name: "Pinterest", connected: false },
+];
+return (
 
     <DashboardLayout>
 <MissionTimeline
+
   steps={workflowSteps}
 />
       <Section title="🎥 AI Workspace">
@@ -87,7 +136,11 @@ const workflowSteps = [
             <p className="text-slate-400">
 
               Titles, hashtags, thumbnails and publishing tools.
-
+<AIDirectorPanel
+  score={92}
+  recommendations={directorReport}
+/>
+<PublishingCenter platforms={platforms} />
             </p>
 
           </Card>

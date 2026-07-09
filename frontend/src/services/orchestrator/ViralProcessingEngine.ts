@@ -1,6 +1,6 @@
+import { TaskScheduler } from "@/services/brain/TaskScheduler";
 import { MissionPlanner } from "@/services/brain/MissionPlanner";
-import { WorkflowState } from "@/services/brain/WorkflowState";
-import { AIExecutor } from "@/services/executor/AIExecutor";
+import { MemoryManager } from "@/services/brain/memory";
 
 import type { Mission } from "@/services/brain/Mission";
 
@@ -14,32 +14,28 @@ export class ViralProcessingEngine {
     console.log("STARTING VIRAL PROCESS");
     console.log("================================");
 
-    const planner = new MissionPlanner();
+    const memory = new MemoryManager(
+      mission.creatorId
+    );
 
-    const workflow = new WorkflowState();
+    const planner =
+      new MissionPlanner(memory);
 
-    const executor = new AIExecutor(workflow);
+    const tasks =
+      planner.plan(mission);
 
-    const tasks = planner.plan(mission);
+    const scheduler =
+      new TaskScheduler();
 
-    for (const task of tasks) {
-
-      console.log(
-        `Running ${task.agent}...`
-      );
-
-      await executor.execute(
-        task.agent,
-        task.payload
-      );
-
-      task.completed = true;
-
-    }
+    await scheduler.run(tasks);
 
     console.log("================================");
     console.log("MISSION COMPLETED");
     console.log("================================");
+
+    console.table(
+      memory.getSummary()
+    );
 
   }
 

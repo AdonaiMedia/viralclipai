@@ -1,16 +1,23 @@
 export type EventName =
   | "mission.created"
   | "mission.started"
+
+  | "processing.updated"
+
   | "analysis.completed"
   | "clips.generated"
   | "thumbnail.generated"
   | "publishing.completed";
 
-type Listener = (payload: any) => void | Promise<void>;
+export type Listener<T = unknown> =
+  (payload: T) => void | Promise<void>;
 
 export class EventBus {
 
-  private listeners = new Map<EventName, Listener[]>();
+  private listeners = new Map<
+    EventName,
+    Listener[]
+  >();
 
   on(
     event: EventName,
@@ -26,9 +33,28 @@ export class EventBus {
 
   }
 
+  off(
+    event: EventName,
+    listener: Listener
+  ) {
+
+    const current =
+      this.listeners.get(event);
+
+    if (!current) return;
+
+    this.listeners.set(
+      event,
+      current.filter(
+        (item) => item !== listener
+      )
+    );
+
+  }
+
   async emit(
     event: EventName,
-    payload: any
+    payload: unknown
   ) {
 
     const listeners =

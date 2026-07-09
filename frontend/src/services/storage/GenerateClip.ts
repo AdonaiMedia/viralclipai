@@ -1,4 +1,4 @@
-import { cutVideoClip } from "./CutVideoClip";
+import { cutVideoClip } from "../ffmpeg/CutVideoClip";
 import { uploadClip } from "./uploadClip";
 
 export async function generateClip(

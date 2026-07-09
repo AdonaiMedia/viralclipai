@@ -67,10 +67,8 @@ export interface DashboardVideo {
 
 export interface DashboardStats {
   totalVideos: number;
-
   totalClips: number;
-
-  averageScore: number;
-
   completedVideos: number;
+  processingVideos: number;
+  averageViralScore: number;
 }

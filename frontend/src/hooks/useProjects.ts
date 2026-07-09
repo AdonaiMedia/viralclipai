@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { getProjects } from "@/services/projects/GetProjects";
+import { getProjects } from "../services/projects/GetProjects";
 
 export function useProjects() {
 

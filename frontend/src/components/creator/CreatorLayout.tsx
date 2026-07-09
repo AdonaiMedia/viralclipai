@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import DashboardShell from "@/components/layout/DashboardShell";
 
 interface Props {
   children: ReactNode;
@@ -9,15 +10,11 @@ interface Props {
 export default function CreatorLayout({
   children,
 }: Props) {
-
   return (
-
-    <div className="mx-auto max-w-7xl space-y-8">
-
-      {children}
-
-    </div>
-
+    <DashboardShell>
+      <div className="mx-auto w-full max-w-7xl space-y-8">
+        {children}
+      </div>
+    </DashboardShell>
   );
-
 }
