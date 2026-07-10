@@ -1,53 +1,45 @@
-import { WorkflowState } from "@/services/brain/WorkflowState";
-import { AgentRegistry, AgentName } from "@/services/agents/AgentRegistry";
+import { AgentRegistry } from "@/services/agents/AgentRegistry";
+import { WorkflowState, WorkflowStep } from "@/services/brain/WorkflowState";
+
+import type { Task } from "@/services/brain/Task";
 
 export class AIExecutor {
+
   constructor(
     private workflow: WorkflowState
   ) {}
 
-  async execute(
-    agentName: AgentName,
-    payload: any
-  ) {
-    const agent =
-      AgentRegistry.get(agentName);
+  async execute(task: Task) {
 
-    if (!agent) {
-      throw new Error(
-        `Agent not found: ${agentName}`
-      );
+    console.log("================================");
+    console.log("EXECUTING TASK");
+    console.log(task.name);
+    console.log("================================");
+
+    const stepMap: Partial<Record<typeof task.agent, WorkflowStep>> = {
+      analysis: "analysis",
+      clip: "clips",
+      thumbnail: "thumbnails",
+      title: "titles",
+      publishing: "publishing",
+    };
+
+    const step = stepMap[task.agent];
+
+    if (step) {
+      this.workflow.start(step);
     }
 
-    const result =
-      await agent.execute(payload);
+    const agent = AgentRegistry.get(task.agent);
 
-    switch (agentName) {
-      case "analysis":
-        this.workflow.complete("analysis");
-        break;
+    const result = await agent.execute(task.payload);
 
-      case "clip":
-        this.workflow.complete("clips");
-        break;
-
-      case "recap":
-        this.workflow.complete("clips");
-        break;
-
-      case "thumbnail":
-        this.workflow.complete("thumbnails");
-        break;
-
-      case "title":
-        this.workflow.complete("titles");
-        break;
-
-      case "publishing":
-        this.workflow.complete("publishing");
-        break;
+    if (step) {
+      this.workflow.complete(step);
     }
 
     return result;
+
   }
+
 }

@@ -1,111 +1,79 @@
-import type { Mission } from "./Mission";
+import { UserMission } from "@/services/director/MissionIntent";
 import type { Task } from "./Task";
 
-import { MemoryManager } from "./memory";
-
 export class MissionPlanner {
-  constructor(
-    private memory?: MemoryManager
-  ) {}
 
-  plan(
-    mission: Mission
-  ): Task[] {
+  plan(mission: UserMission): Task[] {
 
     const tasks: Task[] = [];
 
-    switch (mission.type) {
+    const addTask = (
+      id: string,
+      agent: any,
+      name: string
+    ) => {
 
-      case "analysis": {
+      tasks.push({
+        id,
+        agent,
+        name,
+        payload: {},
+        completed: false,
+      });
 
-        const analysisId = crypto.randomUUID();
-        const thumbnailId = crypto.randomUUID();
-        const titleId = crypto.randomUUID();
+    };
 
-        tasks.push({
-          id: analysisId,
-          agent: "analysis",
-          name: "Analyze Video",
-          payload: mission.payload,
-          completed: false,
-        });
+    for (const intent of mission.intents) {
 
-        tasks.push({
-          id: thumbnailId,
-          agent: "thumbnail",
-          name: "Generate Thumbnail",
-          payload: mission.payload,
-          completed: false,
-          dependsOn: [analysisId],
-        });
+      switch (intent) {
 
-        tasks.push({
-          id: titleId,
-          agent: "title",
-          name: "Generate Title",
-          payload: mission.payload,
-          completed: false,
-          dependsOn: [analysisId],
-        });
+        case "clips":
+          addTask(
+            "clip",
+            "clip",
+            "Generate Viral Clips"
+          );
+          break;
 
-        break;
-      }
+        case "captions":
+          addTask(
+            "caption",
+            "caption",
+            "Generate Captions"
+          );
+          break;
 
-      case "clips": {
+        case "titles":
+          addTask(
+            "title",
+            "title",
+            "Generate Titles"
+          );
+          break;
 
-        const clipId = crypto.randomUUID();
-        const captionId = crypto.randomUUID();
-        const publishId = crypto.randomUUID();
+        case "thumbnails":
+          addTask(
+            "thumbnail",
+            "thumbnail",
+            "Generate Thumbnail"
+          );
+          break;
 
-        tasks.push({
-          id: clipId,
-          agent: "clip",
-          name: "Generate Clips",
-          payload: mission.payload,
-          completed: false,
-        });
+        case "publishing":
+          addTask(
+            "publish",
+            "publishing",
+            "Publish Video"
+          );
+          break;
 
-        tasks.push({
-          id: captionId,
-          agent: "caption",
-          name: "Generate Captions",
-          payload: mission.payload,
-          completed: false,
-          dependsOn: [clipId],
-        });
-
-        tasks.push({
-          id: publishId,
-          agent: "publishing",
-          name: "Publish Content",
-          payload: mission.payload,
-          completed: false,
-          dependsOn: [clipId, captionId],
-        });
-
-        break;
-      }
-
-      default:
-        break;
-    }
-
-    if (this.memory) {
-
-      const summary =
-        this.memory.getSummary();
-
-      if (summary.averageProjectScore < 70) {
-
-        tasks.push({
-          id: crypto.randomUUID(),
-          agent: "coach",
-          name: "AI Coach Review",
-          payload: {
-            reason: "Low viral score",
-          },
-          completed: false,
-        });
+        case "coaching":
+          addTask(
+            "coach",
+            "coach",
+            "Creator Coaching"
+          );
+          break;
 
       }
 

@@ -1,8 +1,10 @@
 import { transcribeAudio } from "../transcription/transcribe";
+import { saveTranscript } from "../transcription/saveTranscript";
 import { analyzeTranscript } from "../intelligence/TranscriptIntelligence";
 import { detectViralMoments } from "../intelligence/ViralMomentDetector";
 
 export async function runTranscriptPipeline(
+  videoId: number,
   extractedAudio: string
 ) {
 
@@ -12,6 +14,11 @@ export async function runTranscriptPipeline(
 
   const transcript =
     await transcribeAudio(extractedAudio);
+
+  await saveTranscript(
+    videoId,
+    transcript
+  );
 
   const intelligence =
     await analyzeTranscript(transcript);

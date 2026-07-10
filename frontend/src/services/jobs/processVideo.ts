@@ -115,13 +115,14 @@ export async function processVideo(
       .eq("id", videoId);
 
     const {
-      transcript,
-      intelligence,
-      viralMoments,
-    } =
-      await runTranscriptPipeline(
-        extractedAudio
-      );
+  transcript,
+  intelligence,
+  viralMoments,
+} =
+  await runTranscriptPipeline(
+    videoId,
+    extractedAudio
+  );
 
     console.log(
       "TRANSCRIPT PIPELINE COMPLETE"

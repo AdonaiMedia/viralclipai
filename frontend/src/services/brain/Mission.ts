@@ -1,28 +1,106 @@
-export interface Mission {
+import type { Mission } from "./Mission";
+import type { Task } from "./Task";
 
-  id: string;
+import { MemoryManager } from "./memory";
 
-  creatorId: string;
+export class MissionPlanner {
 
-  type:
-    | "analysis"
-    | "clips"
-    | "recap"
-    | "translation"
-    | "voice-clone"
-    | "lip-sync"
-    | "thumbnail"
-    | "publishing"
-    | "campaign";
+  constructor(
+    private memory: MemoryManager
+  ) {}
 
-  status:
-    | "pending"
-    | "running"
-    | "completed"
-    | "failed";
+  plan(
+    mission: Mission
+  ): Task[] {
 
-  payload: any;
+    const tasks: Task[] = [];
 
-  createdAt: Date;
+    switch (mission.type) {
+
+      case "analysis":
+
+        tasks.push({
+          id: "analysis",
+          agent: "analysis",
+          name: "Analyze Video",
+          payload: mission.payload,
+          completed: false,
+        });
+
+        break;
+
+      case "clips":
+
+        tasks.push(
+          {
+            id: "analysis",
+            agent: "analysis",
+            name: "Analyze Video",
+            payload: mission.payload,
+            completed: false,
+          },
+          {
+            id: "clip",
+            agent: "clip",
+            name: "Generate Viral Clips",
+            payload: mission.payload,
+            completed: false,
+            dependsOn: ["analysis"],
+          },
+          {
+            id: "thumbnail",
+            agent: "thumbnail",
+            name: "Generate Thumbnail",
+            payload: mission.payload,
+            completed: false,
+            dependsOn: ["clip"],
+          },
+          {
+            id: "title",
+            agent: "title",
+            name: "Generate Titles",
+            payload: mission.payload,
+            completed: false,
+            dependsOn: ["clip"],
+          }
+        );
+
+        break;
+
+      case "translation":
+
+        tasks.push({
+          id: "translation",
+          agent: "translation",
+          name: "Translate Video",
+          payload: mission.payload,
+          completed: false,
+        });
+
+        break;
+
+      case "publishing":
+
+        tasks.push({
+          id: "publishing",
+          agent: "publishing",
+          name: "Publish Content",
+          payload: mission.payload,
+          completed: false,
+        });
+
+        break;
+
+      default:
+
+        console.warn(
+          `Mission type '${mission.type}' has no planner yet.`
+        );
+
+    }
+
+    return tasks;
+
+  }
 
 }

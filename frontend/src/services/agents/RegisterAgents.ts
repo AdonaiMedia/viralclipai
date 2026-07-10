@@ -1,13 +1,20 @@
 import { AgentRegistry } from "./AgentRegistry";
-import { RecapAgent } from "./RecapAgent";
+
 import { AnalysisAgent } from "./AnalysisAgent";
 import { ClipAgent } from "./ClipAgent";
+import { ThumbnailAgent } from "./ThumbnailAgent";
+import { CaptionAgent } from "./CaptionAgent";
+import { TitleAgent } from "./TitleAgent";
+import { PublishingAgent } from "./PublishingAgent";
+import { CoachAgent } from "./CoachAgent";
 
-let registered = false;
+let initialized = false;
 
 export function registerAgents() {
 
-  if (registered) return;
+  if (initialized) {
+    return;
+  }
 
   AgentRegistry.register(
     "analysis",
@@ -18,15 +25,36 @@ export function registerAgents() {
     "clip",
     new ClipAgent()
   );
-AgentRegistry.register(
 
-  "recap",
+  AgentRegistry.register(
+    "thumbnail",
+    new ThumbnailAgent()
+  );
 
-  new RecapAgent()
+  AgentRegistry.register(
+    "caption",
+    new CaptionAgent()
+  );
 
-);
-  registered = true;
+  AgentRegistry.register(
+    "title",
+    new TitleAgent()
+  );
 
-  console.log("✅ Agents Registered");
+  AgentRegistry.register(
+    "publishing",
+    new PublishingAgent()
+  );
 
+  AgentRegistry.register(
+    "coach",
+    new CoachAgent()
+  );
+
+  initialized = true;
+
+  console.log("================================");
+  console.log("AI WORKFORCE READY");
+  console.log("Registered Agents:");
+  console.table(AgentRegistry.list());
 }
