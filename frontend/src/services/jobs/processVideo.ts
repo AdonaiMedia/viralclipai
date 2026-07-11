@@ -1,15 +1,13 @@
+import { runAIOrchestrator } from "@/services/ai/AIOrchestrator";
 import { saveProcessingProgress } from "../database/saveProcessingProgress";
 import { supabaseServer } from "@/lib/supabase-server";
-
 import { emitProcessingEvent } from "@/services/events";
-
 import { runVideoPipeline } from "../pipelines/VideoPipeline";
 import { runAudioPipeline } from "../pipelines/AudioPipeline";
 import { runTranscriptPipeline } from "../pipelines/TranscriptPipeline";
 import { runClipPipeline } from "../pipelines/ClipPipeline";
 import { runThumbnailPipeline } from "../pipelines/ThumbnailPipeline";
 import { runDatabasePipeline } from "../pipelines/DatabasePipeline";
-
 export async function processVideo(
   videoId: number
 ) {
@@ -123,6 +121,28 @@ export async function processVideo(
     videoId,
     extractedAudio
   );
+
+  const aiContent =
+  await runAIOrchestrator({
+
+    transcript,
+
+    topic: intelligence.topic,
+
+    platform: "youtube",
+
+    language: "en",
+
+  });
+const fullIntelligence = {
+  ...intelligence,
+  ai: aiContent,
+};
+
+console.log("================================");
+console.log("AI CONTENT");
+console.log("================================");
+console.log(aiContent);
 
     console.log(
       "TRANSCRIPT PIPELINE COMPLETE"
@@ -254,12 +274,12 @@ export async function processVideo(
     */
 
     await runDatabasePipeline(
-      videoId,
-      intelligence,
-      viralMoments,
-      overallScore,
-      generatedClips
-    );
+  videoId,
+  fullIntelligence,
+  viralMoments,
+  overallScore,
+  generatedClips
+);
 
     console.log(
       "DATABASE PIPELINE COMPLETE"

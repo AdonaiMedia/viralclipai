@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import type { Mission } from "@/services/brain/Mission";
 import type { DashboardVideo } from "@/types/Dashboard";
 
-import { interpretCommand, runMission } from "@/services/director";
+import { interpretCommand } from "@/services/director/CommandInterpreter";
 import { getDashboardData } from "@/services/dashboard/GetDashboardData";
 
 import { useAIProcessing } from "@/hooks/useAIProcessing";
@@ -148,9 +148,12 @@ export default function CreatorCommandCenter() {
             createdAt: new Date(),
           };
 
-          await runMission(mission);
+       console.log("MISSION CREATED");
+console.log(mission);
 
-          console.log("MISSION COMPLETED");
+// TODO:
+// Hapa baadaye tutaita
+// POST /api/missions/run
         }}
       />
 

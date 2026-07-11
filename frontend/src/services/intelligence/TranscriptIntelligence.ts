@@ -1,28 +1,46 @@
+export interface TranscriptIntelligence {
+
+  topic: string;
+
+  emotions: string[];
+
+  audience: string[];
+
+  virality: string;
+
+  reason: string;
+
+}
+
 export async function analyzeTranscript(
-transcript: string
-) {
+  transcript: string
+): Promise<TranscriptIntelligence> {
 
-console.log("================================");
-console.log("FAKE TRANSCRIPT INTELLIGENCE");
-console.log("================================");
+  console.log("================================");
+  console.log("TRANSCRIPT INTELLIGENCE");
+  console.log("================================");
 
-return `
-Topic: Christian Motivation
+  return {
 
-Emotion:
-Hope
-Faith
-Encouragement
+    topic: "Christian Motivation",
 
-Audience:
-Christians
-Youth
-General Audience
+    emotions: [
+      "Hope",
+      "Faith",
+      "Encouragement",
+    ],
 
-Virality Potential:
-High
+    audience: [
+      "Christians",
+      "Youth",
+      "General Audience",
+    ],
 
-Reason:
-Contains emotional and inspirational language.
-`;
+    virality: "High",
+
+    reason:
+      "Contains emotional and inspirational language.",
+
+  };
+
 }

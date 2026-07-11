@@ -1,9 +1,9 @@
-import { AIContentRequest } from "../services/ai/types";
+import { AIContentRequest } from "./types";
 
-import { generateTitle } from "../services/ai/titleGenerator";
-import { generateCaption } from "../services/ai/captionGenerator";
-import { generateHook } from "../services/ai/generateHook";
-import { generateHashtags } from "../services/ai/generateHashtags";
+import { generateTitle } from "./titleGenerator";
+import { generateCaption } from "./captionGenerator";
+import { generateHook } from "./generateHook";
+import { generateHashtags } from "./generateHashtags";
 
 export interface AIOrchestratorResult {
   success: boolean;

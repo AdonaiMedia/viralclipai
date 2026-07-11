@@ -1,5 +1,6 @@
 import { saveAnalysis } from "../database/saveAnalysis";
 import { saveClip } from "../database/saveClip";
+import { TranscriptIntelligence } from "../intelligence/TranscriptIntelligence";
 
 interface GeneratedClip {
   startTime: number;
@@ -7,10 +8,18 @@ interface GeneratedClip {
   clipUrl: string;
   viralScore: number;
 }
-
+interface FullTranscriptIntelligence extends TranscriptIntelligence {
+  ai: {
+    success: boolean;
+    title: string;
+    caption: string;
+    hook: string;
+    hashtags: string;
+  };
+}
 export async function runDatabasePipeline(
   videoId: number,
-  intelligence: string,
+intelligence: FullTranscriptIntelligence,
   viralMoments: unknown[],
   overallScore: number,
   generatedClips: GeneratedClip[]
@@ -21,11 +30,11 @@ export async function runDatabasePipeline(
 
   // Save AI Analysis
   await saveAnalysis(
-    videoId,
-    intelligence,
-    JSON.stringify(viralMoments),
-    overallScore
-  );
+  videoId,
+  JSON.stringify(intelligence),
+  JSON.stringify(viralMoments),
+  overallScore
+);
 
   // Save Generated Clips
   const savedClips = [];
