@@ -1,32 +1,21 @@
-export interface TitleRequest {
-  transcript: string;
-  platform?: string;
-  language?: string;
-}
-
-export interface TitleResult {
-  success: boolean;
-  title: string;
-}
+import {
+  AIContentRequest,
+  AIContentResult,
+} from "./types";
 
 export async function generateTitle(
-  request: TitleRequest
-): Promise<TitleResult> {
+  request: AIContentRequest
+): Promise<AIContentResult> {
 
-  console.log("================================");
-  console.log("TITLE GENERATOR");
-  console.log("================================");
-
-  const text = request.transcript.trim();
-
-  const title =
-    text.length > 60
-      ? text.substring(0, 60) + "..."
-      : text || "Untitled Video";
+  const topic =
+    request.topic ||
+    request.title ||
+    request.transcript ||
+    "Untitled Video";
 
   return {
     success: true,
-    title,
+    content: `🔥 ${topic} You Must Watch!`,
   };
 
 }

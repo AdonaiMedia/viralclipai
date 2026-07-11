@@ -1,29 +1,21 @@
-export interface CaptionRequest {
-  transcript: string;
-  title?: string;
-  platform?: string;
-}
-
-export interface CaptionResult {
-  success: boolean;
-  caption: string;
-}
+import {
+  AIContentRequest,
+  AIContentResult,
+} from "./types";
 
 export async function generateCaption(
-  request: CaptionRequest
-): Promise<CaptionResult> {
+  request: AIContentRequest
+): Promise<AIContentResult> {
 
-  console.log("================================");
-  console.log("CAPTION GENERATOR");
-  console.log("================================");
-
-  const caption =
-    request.transcript.length > 180
-      ? request.transcript.substring(0, 180) + "..."
-      : request.transcript;
+  const topic =
+    request.topic ||
+    request.title ||
+    request.transcript ||
+    "this topic";
 
   return {
     success: true,
-    caption,
+    content: `Create a viral ${request.platform} caption about ${topic} in ${request.language}.`,
   };
+
 }
