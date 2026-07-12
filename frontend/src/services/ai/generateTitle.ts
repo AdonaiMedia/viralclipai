@@ -6,16 +6,16 @@ import {
 import { aiProvider } from "./AIProvider";
 import { PromptBuilder } from "./PromptBuilder";
 
-export async function generateHashtags(
+export async function generateTitle(
   request: AIContentRequest
 ): Promise<AIContentResult> {
 
   const prompt =
-    PromptBuilder.hashtags(request);
+    PromptBuilder.title(request);
 
   const result =
     await aiProvider.generate(
-      "hashtags",
+      "title",
       request,
       prompt
     );
@@ -25,7 +25,7 @@ export async function generateHashtags(
 
     content:
       result.content ||
-      "#viral #shorts #reels #fyp",
+      `🔥 ${request.topic} You Must Watch!`,
   };
 
 }

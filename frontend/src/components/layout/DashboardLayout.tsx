@@ -12,17 +12,23 @@ export default function DashboardLayout({
   children,
 }: Props) {
   return (
-    <div className="flex min-h-screen bg-slate-950 text-white">
+    <div className="flex h-screen overflow-hidden bg-slate-950 text-white">
 
+      {/* Sidebar */}
       <Sidebar />
 
-      <div className="flex-1 flex flex-col">
+      {/* Content */}
+      <div className="flex flex-1 flex-col overflow-hidden">
 
         <Topbar />
 
-        <main className="flex-1 p-8 overflow-auto">
+        <main className="flex-1 overflow-y-auto px-5 py-4 lg:px-6">
 
-          {children}
+          <div className="mx-auto max-w-7xl space-y-5">
+
+            {children}
+
+          </div>
 
         </main>
 

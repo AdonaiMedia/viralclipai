@@ -1,7 +1,7 @@
 import { AIContentRequest } from "./types";
 
-import { generateTitle } from "./titleGenerator";
-import { generateCaption } from "./captionGenerator";
+import { generateTitle } from "./generateTitle";
+import { generateCaption } from "./generateCaption";
 import { generateHook } from "./generateHook";
 import { generateHashtags } from "./generateHashtags";
 
@@ -12,6 +12,9 @@ export interface AIOrchestratorResult {
   caption: string;
   hook: string;
   hashtags: string;
+
+  provider?: string;
+  model?: string;
 }
 
 export async function runAIOrchestrator(
@@ -23,10 +26,10 @@ export async function runAIOrchestrator(
   console.log("================================");
 
   const [
-    titleResult,
-    captionResult,
-    hookResult,
-    hashtagsResult,
+    title,
+    caption,
+    hook,
+    hashtags,
   ] = await Promise.all([
     generateTitle(request),
     generateCaption(request),
@@ -37,12 +40,16 @@ export async function runAIOrchestrator(
   return {
     success: true,
 
-    title: titleResult.content,
+    title: title.content,
 
-    caption: captionResult.content,
+    caption: caption.content,
 
-    hook: hookResult.content,
+    hook: hook.content,
 
-    hashtags: hashtagsResult.content,
+    hashtags: hashtags.content,
+
+    provider: title.provider,
+
+    model: title.model,
   };
 }

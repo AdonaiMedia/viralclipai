@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import type { Mission } from "@/services/brain/Mission";
 import type { DashboardVideo } from "@/types/Dashboard";
 
-import { interpretCommand } from "@/services/director/CommandInterpreter";
 import { getDashboardData } from "@/services/dashboard/GetDashboardData";
 
 import { useAIProcessing } from "@/hooks/useAIProcessing";
@@ -18,13 +16,6 @@ import StudioHeader from "./StudioHeader";
 import AnalyticsOverview from "@/components/dashboard/AnalyticsOverview";
 import UploadCard from "@/components/dashboard/UploadCard";
 import VideosList from "@/components/dashboard/VideosList";
-
-import ViralCorePanel from "@/components/command-center/ViralCorePanel";
-import AIWorkforce from "@/components/command-center/AIWorkforce";
-import AIDirector from "@/components/command-center/AIDirector";
-import MissionActivityFeed from "@/components/command-center/MissionActivityFeed";
-import MissionControl from "@/components/command-center/MissionControl";
-import CommandCenter from "@/components/command-center/CommandCenter";
 
 import AIProcessingTimeline from "@/components/processing/AIProcessingTimeline";
 import ProcessingProgress from "@/components/progress/ProcessingProgress";
@@ -119,63 +110,46 @@ export default function CreatorCommandCenter() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5">
+
+      {/* Header */}
       <StudioHeader />
 
+      {/* Analytics */}
       <AnalyticsOverview />
 
-      <ViralCorePanel />
+      {/* Upload + Processing */}
+      <div className="grid gap-5 xl:grid-cols-3">
 
-      <AIWorkforce />
+        <div className="xl:col-span-2">
 
-      <AIDirector
-        onExecute={async (prompt) => {
-          const command = interpretCommand(prompt);
+          <UploadCard
+            onSelectFile={setFile}
+            onUpload={handleUpload}
+          />
 
-          const mission: Mission = {
-            id: crypto.randomUUID(),
+        </div>
 
-            creatorId: "local-user",
+        <div className="space-y-4">
 
-            type: command.type,
+          <AIProcessingTimeline
+            steps={steps}
+          />
 
-            status: "pending",
+          {uploading && (
 
-            payload: {
-              prompt: command.prompt,
-            },
+            <ProcessingProgress
+              percentage={15}
+              message="Uploading video..."
+            />
 
-            createdAt: new Date(),
-          };
+          )}
 
-       console.log("MISSION CREATED");
-console.log(mission);
+        </div>
 
-// TODO:
-// Hapa baadaye tutaita
-// POST /api/missions/run
-        }}
-      />
+      </div>
 
-      <MissionActivityFeed />
-
-      <MissionControl />
-
-      <UploadCard
-        onSelectFile={setFile}
-        onUpload={handleUpload}
-      />
-
-      <AIProcessingTimeline steps={steps} />
-
-      {uploading && (
-        <ProcessingProgress
-          percentage={15}
-          message="Uploading video..."
-        />
-      )}
-
-      <CommandCenter />
+      {/* Uploaded Videos */}
 
       <VideosList
         videos={videos}
@@ -191,6 +165,7 @@ console.log(mission);
           await loadVideos();
         }}
       />
+
     </div>
   );
 }

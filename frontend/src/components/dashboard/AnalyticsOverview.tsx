@@ -28,7 +28,7 @@ export default function AnalyticsOverview() {
       bg: "bg-emerald-500/10",
     },
     {
-      title: "Average Viral Score",
+      title: "Viral Score",
       value: `${stats?.averageViralScore ?? 0}%`,
       icon: TrendingUp,
       color: "text-orange-400",
@@ -44,39 +44,43 @@ export default function AnalyticsOverview() {
   ];
 
   return (
-    <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {cards.map((item) => {
         const Icon = item.icon;
 
         return (
           <div
             key={item.title}
-            className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-blue-500/10"
+            className="rounded-xl border border-slate-800 bg-slate-900 px-5 py-4 transition hover:border-blue-500/40"
           >
             <div className="flex items-center justify-between">
+
               <div>
-                <p className="text-sm font-medium text-slate-400">
+
+                <p className="text-xs uppercase tracking-wide text-slate-500">
                   {item.title}
                 </p>
 
                 {loading ? (
-                  <div className="mt-3 h-9 w-20 animate-pulse rounded bg-slate-700" />
+                  <div className="mt-2 h-7 w-16 animate-pulse rounded bg-slate-700" />
                 ) : (
-                  <h2 className="mt-2 text-3xl font-black text-white">
+                  <h2 className="mt-1 text-2xl font-bold text-white">
                     {item.value}
                   </h2>
                 )}
+
               </div>
 
               <div
-                className={`flex h-14 w-14 items-center justify-center rounded-xl ${item.bg}`}
+                className={`flex h-11 w-11 items-center justify-center rounded-lg ${item.bg}`}
               >
                 <Icon
-                  className={`h-7 w-7 ${item.color} ${
+                  className={`h-5 w-5 ${item.color} ${
                     loading ? "animate-pulse" : ""
                   }`}
                 />
               </div>
+
             </div>
           </div>
         );

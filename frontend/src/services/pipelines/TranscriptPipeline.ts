@@ -1,6 +1,9 @@
 import { transcribeAudio } from "../transcription/transcribe";
 import { saveTranscript } from "../transcription/saveTranscript";
-import { analyzeTranscript } from "../intelligence/TranscriptIntelligence";
+
+import { runAIIntelligence } from "../ai/intelligence/AIIntelligence";
+import { runAIOrchestrator } from "../ai/AIOrchestrator";
+
 import { detectViralMoments } from "../intelligence/ViralMomentDetector";
 
 export async function runTranscriptPipeline(
@@ -12,6 +15,12 @@ export async function runTranscriptPipeline(
   console.log("TRANSCRIPT PIPELINE");
   console.log("================================");
 
+  /*
+  ====================================
+  TRANSCRIBE
+  ====================================
+  */
+
   const transcript =
     await transcribeAudio(extractedAudio);
 
@@ -20,17 +29,58 @@ export async function runTranscriptPipeline(
     transcript
   );
 
+  /*
+  ====================================
+  AI INTELLIGENCE
+  ====================================
+  */
+
   const intelligence =
-    await analyzeTranscript(transcript);
+    await runAIIntelligence(
+      transcript
+    );
+
+  /*
+  ====================================
+  AI CONTENT
+  ====================================
+  */
+
+  const ai =
+    await runAIOrchestrator({
+
+      transcript,
+
+      topic: intelligence.topic,
+
+      platform: "youtube",
+
+      language: "en",
+
+    });
+
+  /*
+  ====================================
+  VIRAL MOMENTS
+  ====================================
+  */
 
   const viralMoments =
-    await detectViralMoments(transcript);
+    await detectViralMoments(
+      transcript
+    );
 
   return {
 
     transcript,
 
-    intelligence,
+    intelligence: {
+
+      ...intelligence,
+
+      ai,
+
+    },
 
     viralMoments,
 

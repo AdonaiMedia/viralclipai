@@ -1,6 +1,8 @@
 import { saveAnalysis } from "../database/saveAnalysis";
 import { saveClip } from "../database/saveClip";
-import { TranscriptIntelligence } from "../intelligence/TranscriptIntelligence";
+
+import { AIIntelligenceResult } from "../ai/intelligence/AIIntelligence";
+import { AIOrchestratorResult } from "../ai/AIOrchestrator";
 
 interface GeneratedClip {
   startTime: number;
@@ -8,38 +10,49 @@ interface GeneratedClip {
   clipUrl: string;
   viralScore: number;
 }
-interface FullTranscriptIntelligence extends TranscriptIntelligence {
-  ai: {
-    success: boolean;
-    title: string;
-    caption: string;
-    hook: string;
-    hashtags: string;
-  };
+
+interface FullTranscriptIntelligence
+  extends AIIntelligenceResult {
+
+  ai: AIOrchestratorResult;
+
 }
+
 export async function runDatabasePipeline(
   videoId: number,
-intelligence: FullTranscriptIntelligence,
+  intelligence: FullTranscriptIntelligence,
   viralMoments: unknown[],
   overallScore: number,
   generatedClips: GeneratedClip[]
 ) {
+
   console.log("================================");
   console.log("DATABASE PIPELINE");
   console.log("================================");
 
-  // Save AI Analysis
-  await saveAnalysis(
-  videoId,
-  JSON.stringify(intelligence),
-  JSON.stringify(viralMoments),
-  overallScore
-);
+  /*
+  ====================================
+  SAVE ANALYSIS
+  ====================================
+  */
 
-  // Save Generated Clips
+  await saveAnalysis(
+    videoId,
+    JSON.stringify(intelligence),
+    JSON.stringify(viralMoments),
+    overallScore
+  );
+
+  /*
+  ====================================
+  SAVE CLIPS
+  ====================================
+  */
+
   const savedClips = [];
 
   for (const clip of generatedClips) {
+
     const saved = await saveClip(
       videoId,
       clip.startTime,
@@ -49,13 +62,19 @@ intelligence: FullTranscriptIntelligence,
     );
 
     savedClips.push(saved);
+
   }
 
-  console.log(`✅ Saved ${savedClips.length} clips`);
+  console.log(`Saved ${savedClips.length} clips`);
 
   return {
+
     success: true,
+
     savedClips,
+
     totalSaved: savedClips.length,
+
   };
+
 }

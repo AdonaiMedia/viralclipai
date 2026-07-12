@@ -118,23 +118,24 @@ export default function UploadCard({
   }, [previewUrl]);
 
   return (
-    <section className="rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-xl">
+    <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg">
 
-      <div className="mb-8 flex items-center gap-4">
+      <div className="mb-4 flex items-center gap-3">
 
-        <div className="rounded-2xl bg-blue-500/10 p-4">
-          <Upload className="h-8 w-8 text-blue-400" />
+        <div className="rounded-xl bg-blue-500/10 p-2">
+          <Upload className="h-6 w-6 text-blue-400" />
         </div>
 
         <div>
-          <h2 className="text-3xl font-bold text-white">
+
+          <h2 className="text-xl font-bold text-white">
             Upload Workspace
           </h2>
 
-          <p className="mt-1 text-slate-400">
-            Upload your video and let ViralClip AI create
-            viral-ready content automatically.
+          <p className="text-sm text-slate-400">
+            Drag & Drop or click below.
           </p>
+
         </div>
 
       </div>
@@ -155,107 +156,121 @@ export default function UploadCard({
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={`cursor-pointer rounded-2xl border-2 border-dashed p-10 text-center transition-all ${
+        className={`cursor-pointer rounded-xl border-2 border-dashed p-4 text-center transition ${
           dragging
             ? "border-blue-500 bg-blue-500/10"
             : "border-slate-700 hover:border-blue-500 hover:bg-slate-800"
         }`}
       >
 
-        <Upload className="mx-auto h-14 w-14 text-blue-400" />
+        <Upload className="mx-auto h-8 w-8 text-blue-400" />
 
-        <h3 className="mt-4 text-xl font-bold text-white">
-          Drag & Drop Video
+        <h3 className="mt-2 text-base font-semibold text-white">
+          Drag Video Here
         </h3>
 
-        <p className="mt-2 text-slate-400">
-          or click here to browse your computer
+        <p className="mt-1 text-xs text-slate-400">
+          or click to browse
         </p>
 
       </div>
+         {/* Preview */}
 
       {selectedFile && metadata && (
+        <div className="mt-4 grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          {/* Video Preview */}
 
-          <div className="overflow-hidden rounded-2xl border border-slate-700 bg-black">
+          <div className="overflow-hidden rounded-xl border border-slate-700 bg-black">
 
             {previewUrl && (
               <video
                 src={previewUrl}
                 controls
-                className="aspect-video w-full"
+                className="aspect-video w-full object-contain"
               />
             )}
 
           </div>
 
-          <div className="rounded-2xl border border-slate-700 bg-slate-800 p-6">
+          {/* Video Details */}
+
+          <div className="rounded-xl border border-slate-700 bg-slate-800 p-4">
 
             <div className="flex items-center justify-between">
 
-              <h3 className="flex items-center gap-2 text-lg font-bold text-white">
+              <h3 className="flex items-center gap-2 text-base font-semibold text-white">
 
-                <FileVideo className="h-5 w-5 text-blue-400" />
+                <FileVideo className="h-4 w-4 text-blue-400" />
 
-                {selectedFile.name}
+                <span className="truncate max-w-[180px]">
+                  {selectedFile.name}
+                </span>
 
               </h3>
 
-              <div className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-4 py-2">
+              <div className="rounded-full bg-emerald-500/10 px-2 py-1">
 
-                <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-
-                <span className="font-semibold text-emerald-400">
-                  Ready
+                <span className="text-xs font-semibold text-emerald-400">
+                  READY
                 </span>
 
               </div>
 
             </div>
 
-            <div className="mt-6 grid gap-4">
+            <div className="mt-5 space-y-3 text-sm">
 
-              <Info icon={<HardDrive className="h-5 w-5 text-blue-400" />}>
+              <Info
+                icon={<HardDrive className="h-4 w-4 text-blue-400" />}
+              >
                 {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
               </Info>
 
-              <Info icon={<MonitorPlay className="h-5 w-5 text-blue-400" />}>
+              <Info
+                icon={<MonitorPlay className="h-4 w-4 text-blue-400" />}
+              >
                 {metadata.width} × {metadata.height}
               </Info>
 
-              <Info icon={<Clock3 className="h-5 w-5 text-blue-400" />}>
+              <Info
+                icon={<Clock3 className="h-4 w-4 text-blue-400" />}
+              >
                 {formatDuration(metadata.duration)}
               </Info>
 
-              <Info icon={<Smartphone className="h-5 w-5 text-blue-400" />}>
+              <Info
+                icon={<Smartphone className="h-4 w-4 text-blue-400" />}
+              >
                 {metadata.orientation}
               </Info>
 
-              <Info icon={<Calendar className="h-5 w-5 text-blue-400" />}>
-                {new Date().toLocaleString()}
+              <Info
+                icon={<Calendar className="h-4 w-4 text-blue-400" />}
+              >
+                {new Date().toLocaleDateString()}
               </Info>
 
-              <Info icon={<Cpu className="h-5 w-5 text-blue-400" />}>
-                Estimated AI Time: {estimateAI(metadata.duration)}
+              <Info
+                icon={<Cpu className="h-4 w-4 text-blue-400" />}
+              >
+                AI Time: {estimateAI(metadata.duration)}
               </Info>
 
             </div>
 
+            <button
+              type="button"
+              onClick={onUpload}
+              className="mt-5 w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+            >
+              🚀 Start AI Analysis
+            </button>
+
           </div>
 
         </div>
-
       )}
-
-      <button
-        type="button"
-        disabled={!selectedFile}
-        onClick={onUpload}
-        className="mt-8 w-full rounded-2xl bg-blue-600 py-4 text-lg font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
-      >
-        Upload & Start AI Analysis
-      </button>
 
     </section>
   );
@@ -269,9 +284,9 @@ function Info({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center gap-3 text-slate-300">
+    <div className="flex items-center gap-2 text-slate-300">
       {icon}
-      <span>{children}</span>
+      <span className="text-sm">{children}</span>
     </div>
   );
-}
+}   
