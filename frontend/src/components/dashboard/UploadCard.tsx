@@ -6,7 +6,6 @@ import {
   FileVideo,
   HardDrive,
   Calendar,
-  CheckCircle2,
   MonitorPlay,
   Clock3,
   Smartphone,
@@ -22,6 +21,8 @@ interface Props {
   onSelectFile: (file: File) => void;
   onUpload: () => void;
 }
+
+const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1GB
 
 export default function UploadCard({
   onSelectFile,
@@ -72,13 +73,24 @@ export default function UploadCard({
   }
 
   async function selectFile(file: File) {
+    if (!file.type.startsWith("video/")) {
+      alert("Please select a valid video.");
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      alert("Maximum upload size is 1GB.");
+      return;
+    }
+
     setSelectedFile(file);
 
     const url = URL.createObjectURL(file);
 
     setPreviewUrl(url);
 
-    const info = await getVideoMetadata(file);
+    const info =
+      await getVideoMetadata(file);
 
     setMetadata(info);
 
@@ -88,7 +100,8 @@ export default function UploadCard({
   function handleFileChange(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const file = event.target.files?.[0];
+    const file =
+      event.target.files?.[0];
 
     if (!file) return;
 
@@ -102,7 +115,8 @@ export default function UploadCard({
 
     setDragging(false);
 
-    const file = event.dataTransfer.files?.[0];
+    const file =
+      event.dataTransfer.files?.[0];
 
     if (!file) return;
 
@@ -117,165 +131,213 @@ export default function UploadCard({
     };
   }, [previewUrl]);
 
-  return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4 shadow-lg">
+  return (<div className="space-y-5">
 
-      <div className="mb-4 flex items-center gap-3">
+  <section className="rounded-2xl border border-slate-800 bg-slate-900 p-5 shadow-lg">
 
-        <div className="rounded-xl bg-blue-500/10 p-2">
-          <Upload className="h-6 w-6 text-blue-400" />
-        </div>
+    <div className="mb-5 flex items-center gap-3">
 
-        <div>
-
-          <h2 className="text-xl font-bold text-white">
-            Upload Workspace
-          </h2>
-
-          <p className="text-sm text-slate-400">
-            Drag & Drop or click below.
-          </p>
-
-        </div>
-
+      <div className="rounded-xl bg-blue-500/10 p-3">
+        <Upload className="h-6 w-6 text-blue-400" />
       </div>
 
-      <input
-        ref={inputRef}
-        type="file"
-        accept="video/*"
-        className="hidden"
-        onChange={handleFileChange}
-      />
+      <div>
 
-      <div
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragging(true);
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={handleDrop}
-        className={`cursor-pointer rounded-xl border-2 border-dashed p-4 text-center transition ${
-          dragging
-            ? "border-blue-500 bg-blue-500/10"
-            : "border-slate-700 hover:border-blue-500 hover:bg-slate-800"
-        }`}
-      >
+        <h2 className="text-xl font-bold text-white">
+          Upload Workspace
+        </h2>
 
-        <Upload className="mx-auto h-8 w-8 text-blue-400" />
-
-        <h3 className="mt-2 text-base font-semibold text-white">
-          Drag Video Here
-        </h3>
-
-        <p className="mt-1 text-xs text-slate-400">
-          or click to browse
+        <p className="text-sm text-slate-400">
+          Upload a long video and let ViralClip AI create viral clips automatically.
         </p>
 
       </div>
-         {/* Preview */}
 
-      {selectedFile && metadata && (
-        <div className="mt-4 grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
+    </div>
 
-          {/* Video Preview */}
+    <input
+      ref={inputRef}
+      type="file"
+      accept=".mp4,.mov,.avi,.mkv,.webm"
+      className="hidden"
+      onChange={handleFileChange}
+    />
 
-          <div className="overflow-hidden rounded-xl border border-slate-700 bg-black">
+    <div
+      onClick={() => inputRef.current?.click()}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setDragging(true);
+      }}
+      onDragLeave={() => setDragging(false)}
+      onDrop={handleDrop}
+      className={`cursor-pointer rounded-2xl border-2 border-dashed p-10 text-center transition-all ${
+        dragging
+          ? "border-blue-500 bg-blue-500/10"
+          : "border-slate-700 hover:border-blue-500 hover:bg-slate-800"
+      }`}
+    >
 
-            {previewUrl && (
-              <video
-                src={previewUrl}
-                controls
-                className="aspect-video w-full object-contain"
-              />
-            )}
+      <Upload className="mx-auto h-12 w-12 text-blue-400" />
 
-          </div>
+      <h3 className="mt-4 text-lg font-semibold text-white">
+        Drag & Drop Your Video
+      </h3>
 
-          {/* Video Details */}
+      <p className="mt-2 text-sm text-slate-400">
+        MP4 • MOV • AVI • MKV • WEBM
+      </p>
 
-          <div className="rounded-xl border border-slate-700 bg-slate-800 p-4">
+      <p className="mt-1 text-xs text-slate-500">
+        Maximum file size: 1 GB
+      </p>
 
-            <div className="flex items-center justify-between">
+    </div>
+{/* Preview */}
 
-              <h3 className="flex items-center gap-2 text-base font-semibold text-white">
+{selectedFile && metadata && (
+  <div className="mt-5 grid gap-5 lg:grid-cols-[1.35fr_0.65fr]">
 
-                <FileVideo className="h-4 w-4 text-blue-400" />
+    {/* Video Preview */}
 
-                <span className="truncate max-w-[180px]">
-                  {selectedFile.name}
-                </span>
+    <div className="overflow-hidden rounded-2xl border border-slate-700 bg-black">
 
-              </h3>
-
-              <div className="rounded-full bg-emerald-500/10 px-2 py-1">
-
-                <span className="text-xs font-semibold text-emerald-400">
-                  READY
-                </span>
-
-              </div>
-
-            </div>
-
-            <div className="mt-5 space-y-3 text-sm">
-
-              <Info
-                icon={<HardDrive className="h-4 w-4 text-blue-400" />}
-              >
-                {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-              </Info>
-
-              <Info
-                icon={<MonitorPlay className="h-4 w-4 text-blue-400" />}
-              >
-                {metadata.width} × {metadata.height}
-              </Info>
-
-              <Info
-                icon={<Clock3 className="h-4 w-4 text-blue-400" />}
-              >
-                {formatDuration(metadata.duration)}
-              </Info>
-
-              <Info
-                icon={<Smartphone className="h-4 w-4 text-blue-400" />}
-              >
-                {metadata.orientation}
-              </Info>
-
-              <Info
-                icon={<Calendar className="h-4 w-4 text-blue-400" />}
-              >
-                {new Date().toLocaleDateString()}
-              </Info>
-
-              <Info
-                icon={<Cpu className="h-4 w-4 text-blue-400" />}
-              >
-                AI Time: {estimateAI(metadata.duration)}
-              </Info>
-
-            </div>
-
-            <button
-              type="button"
-              onClick={onUpload}
-              className="mt-5 w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-            >
-              🚀 Start AI Analysis
-            </button>
-
-          </div>
-
-        </div>
+      {previewUrl && (
+        <video
+          src={previewUrl}
+          controls
+          className="aspect-video w-full object-contain"
+        />
       )}
 
-    </section>
-  );
-}
+    </div>
 
+    {/* Details */}
+
+    <div className="rounded-2xl border border-slate-700 bg-slate-800 p-5">
+
+      <div className="flex items-center justify-between">
+
+        <h3 className="flex items-center gap-2 text-base font-semibold text-white">
+
+          <FileVideo className="h-4 w-4 text-blue-400" />
+
+          <span className="truncate max-w-[180px]">
+            {selectedFile.name}
+          </span>
+
+        </h3>
+
+        <div className="rounded-full bg-emerald-500/10 px-3 py-1">
+
+          <span className="text-xs font-semibold text-emerald-400">
+            AI READY
+          </span>
+
+        </div>
+
+      </div>
+
+      <div className="mt-5 space-y-3">
+
+        <Info
+          icon={<HardDrive className="h-4 w-4 text-blue-400" />}
+        >
+          {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+        </Info>
+
+        <Info
+          icon={<MonitorPlay className="h-4 w-4 text-blue-400" />}
+        >
+          {metadata.width} × {metadata.height}
+        </Info>
+
+        <Info
+          icon={<Clock3 className="h-4 w-4 text-blue-400" />}
+        >
+          {formatDuration(metadata.duration)}
+        </Info>
+
+        <Info
+          icon={<Smartphone className="h-4 w-4 text-blue-400" />}
+        >
+          {metadata.orientation}
+        </Info>
+
+        <Info
+          icon={<Calendar className="h-4 w-4 text-blue-400" />}
+        >
+          {new Date().toLocaleDateString()}
+        </Info>
+
+        <Info
+          icon={<Cpu className="h-4 w-4 text-blue-400" />}
+        >
+          Estimated AI Time: {estimateAI(metadata.duration)}
+        </Info>
+
+      </div>
+
+      {metadata.duration > 3600 && (
+
+        <div className="mt-4 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 text-xs text-yellow-400">
+
+          ⚠️ This is a long video. AI processing may take several minutes.
+
+        </div>
+
+      )}
+
+      <button
+        type="button"
+        disabled={!selectedFile}
+        onClick={onUpload}
+        className={`mt-5 w-full rounded-xl py-3 text-sm font-semibold transition ${
+          selectedFile
+            ? "bg-blue-600 text-white hover:bg-blue-700"
+            : "cursor-not-allowed bg-slate-700 text-slate-500"
+        }`}
+      >
+        🚀 Start AI Analysis
+      </button>
+
+    </div>
+
+  </div>
+)}
+
+<div className="mt-6 border-t border-slate-800 pt-4">
+
+  <p className="text-xs uppercase tracking-wider text-slate-500">
+    Supported Platforms
+  </p>
+
+  <div className="mt-3 flex flex-wrap gap-2">
+
+    {[
+      "YouTube",
+      "TikTok",
+      "Instagram",
+      "Facebook",
+      "LinkedIn",
+    ].map((platform) => (
+      <span
+        key={platform}
+        className="rounded-full border border-slate-700 bg-slate-800 px-3 py-1 text-xs text-slate-300"
+      >
+        {platform}
+      </span>
+    ))}
+
+  </div>
+
+</div>
+
+</section>
+
+</div> 
+ );
+}
 function Info({
   icon,
   children,
@@ -289,4 +351,4 @@ function Info({
       <span className="text-sm">{children}</span>
     </div>
   );
-}   
+}
