@@ -2,79 +2,68 @@
 
 import VideoPreview from "./VideoPreview";
 import AIAnalysis from "./AIAnalysis";
-import ClipGallery from "./ClipGallery";
-import MissionTimeline from "./MissionTimeline";
 import AITools from "./AITools";
+import ClipGallery from "./ClipGallery";
 
 interface Props {
-
-  workspace: any;
-
-  publicUrl: string;
-
+  video?: any;
+  analysis?: any;
+  clips?: any[];
+  publicUrl?: string;
 }
 
 export default function Workspace({
-
-  workspace,
-
-  publicUrl,
-
+  video,
+  analysis,
+  clips = [],
+  publicUrl = "",
 }: Props) {
-
-  if (!workspace) {
-
-    return null;
-
-  }
-
   return (
-
     <div className="space-y-6">
 
-      <VideoPreview
-        video={workspace.video}
-        publicUrl={publicUrl}
+      {/* Top */}
+
+      <div className="grid gap-6 xl:grid-cols-3">
+
+        <div className="xl:col-span-2">
+
+          <VideoPreview
+            video={video}
+            publicUrl={publicUrl}
+          />
+
+        </div>
+
+        <div>
+
+          <AIAnalysis
+            analysis={analysis}
+          />
+
+        </div>
+
+      </div>
+
+      {/* AI Tools */}
+
+      <AITools
+        onGenerateTitle={() => console.log("Generate Title")}
+        onGenerateHook={() => console.log("Generate Hook")}
+        onGenerateCaption={() => console.log("Generate Caption")}
+        onGenerateHashtags={() => console.log("Generate Hashtags")}
+        onGenerateTranscript={() => console.log("Generate Transcript")}
+        onTranslate={() => console.log("Translate")}
+        onVoiceOver={() => console.log("Voice Over")}
+        onAnalyze={() => console.log("Analyze")}
+        onPublish={() => console.log("Publish")}
       />
 
-      <MissionTimeline
-  steps={[
-    {
-      name: "Video Uploaded",
-      completed: true,
-    },
-    {
-      name: "Video Analysis",
-      completed: !!workspace.analysis,
-    },
-    {
-      name: "Clip Generation",
-      completed:
-        workspace.clips?.length > 0,
-    },
-    {
-      name: "Thumbnail Generation",
-      completed: false,
-    },
-    {
-      name: "Publishing",
-      completed: false,
-    },
-  ]}
-/>
-
-      <AIAnalysis
-        analysis={workspace.analysis}
-      />
+      {/* Generated Clips */}
 
       <ClipGallery
-        clips={workspace.clips}
+        clips={clips}
       />
 
-      <AITools />
-
     </div>
-
   );
-
 }

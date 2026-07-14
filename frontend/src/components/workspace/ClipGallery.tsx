@@ -1,7 +1,14 @@
 "use client";
 
+import {
+  PlayCircle,
+  Download,
+  Share2,
+  Trash2,
+  Star,
+} from "lucide-react";
+
 import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
 
 interface Props {
   clips: any[];
@@ -10,28 +17,48 @@ interface Props {
 export default function ClipGallery({
   clips,
 }: Props) {
-
   return (
-
     <Card>
 
-      <h2 className="text-xl font-bold mb-5">
+      <div className="mb-6 flex items-center justify-between">
 
-        ✂ Generated Clips
+        <div>
 
-      </h2>
+          <h2 className="text-2xl font-bold text-white">
+            ✂ AI Clip Gallery
+          </h2>
+
+          <p className="text-sm text-slate-400">
+            AI generated viral clips
+          </p>
+
+        </div>
+
+        <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm text-blue-400">
+          {clips.length} Clips
+        </span>
+
+      </div>
 
       {clips.length === 0 ? (
 
-        <p className="text-slate-400">
+        <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900 p-10 text-center">
 
-          No clips generated yet.
+          <PlayCircle className="mx-auto mb-4 h-14 w-14 text-slate-600" />
 
-        </p>
+          <h3 className="text-lg font-semibold text-white">
+            No clips generated
+          </h3>
+
+          <p className="mt-2 text-slate-400">
+            Upload a video and let AI generate viral clips.
+          </p>
+
+        </div>
 
       ) : (
 
-        <div className="space-y-4">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
 
           {clips.map((clip) => {
 
@@ -53,46 +80,62 @@ export default function ClipGallery({
 
               <div
                 key={clip.id}
-                className="border border-slate-700 rounded-xl p-5 bg-slate-900 flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4"
+                className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition hover:border-blue-500/40"
               >
 
-                <div>
+                <div className="flex aspect-video items-center justify-center bg-slate-800">
 
-                  <p className="font-semibold">
-
-                    {clip.start_time}s → {clip.end_time}s
-
-                  </p>
-
-                  <p className="text-slate-400 text-sm mt-1">
-
-                    Duration: {duration}s
-
-                  </p>
-
-                  <p
-                    className={`font-semibold mt-2 ${scoreColor}`}
-                  >
-
-                    ⭐ Viral Score: {score}
-
-                  </p>
+                  <PlayCircle className="h-16 w-16 text-slate-600" />
 
                 </div>
 
-                <div className="flex gap-3">
+                <div className="space-y-4 p-5">
 
-                  <Button>
+                  <div>
 
-                    ▶ Preview
+                    <h3 className="font-semibold text-white">
+                      Clip #{clip.id}
+                    </h3>
 
-                  </Button>
+                    <p className="mt-1 text-sm text-slate-400">
+                      {clip.start_time}s → {clip.end_time}s
+                    </p>
 
-                  <Button>
+                    <p className="text-xs text-slate-500">
+                      Duration: {duration}s
+                    </p>
 
-                    ⬇ Download
+                  </div>
 
-                  </Button>
+                  <div className="flex items-center justify-between">
+
+                    <span
+                      className={`rounded-full bg-slate-800 px-3 py-1 text-sm font-semibold ${scoreColor}`}
+                    >
+                      🔥 {score}
+                    </span>
+
+                    <div className="flex gap-2">
+
+                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
+                        <Star className="h-4 w-4 text-yellow-400" />
+                      </button>
+
+                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
+                        <Download className="h-4 w-4 text-blue-400" />
+                      </button>
+
+                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
+                        <Share2 className="h-4 w-4 text-emerald-400" />
+                      </button>
+
+                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
+                        <Trash2 className="h-4 w-4 text-red-400" />
+                      </button>
+
+                    </div>
+
+                  </div>
 
                 </div>
 
@@ -107,7 +150,5 @@ export default function ClipGallery({
       )}
 
     </Card>
-
   );
-
 }
