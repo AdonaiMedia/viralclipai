@@ -1,5 +1,5 @@
 import { Agent } from "./AgentRegistry";
-import { generateTitle } from "@/services/ai/titleGenerator";
+import { generateTitle } from "@/services/ai/generateTitle";
 
 export class TitleAgent implements Agent {
 
@@ -9,11 +9,12 @@ export class TitleAgent implements Agent {
     console.log("TITLE AGENT");
     console.log("================================");
 
-    return await generateTitle({
-      transcript: payload.transcript,
-      platform: payload.platform,
-      language: payload.language,
-    });
+ return await generateTitle({
+  transcript: payload.transcript,
+  topic: payload.topic,
+  platform: payload.platform,
+  language: payload.language,
+});
 
   }
 

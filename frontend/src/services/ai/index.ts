@@ -5,6 +5,7 @@ export * from "./types";
 export * from "./generateTitle";
 export * from "./generateCaption";
 export * from "./generateHook";
+export * from "./generateScript";
 export * from "./generateHashtags";
 
 export { runAIOrchestrator } from "./AIOrchestrator";

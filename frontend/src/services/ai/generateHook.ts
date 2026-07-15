@@ -3,7 +3,7 @@ import {
   AIContentResult,
 } from "./types";
 
-import { aiProvider } from "./AIProvider";
+import { runAIProvider } from "./AIProvider";
 import { PromptBuilder } from "./PromptBuilder";
 
 export async function generateHook(
@@ -14,18 +14,21 @@ export async function generateHook(
     PromptBuilder.hook(request);
 
   const result =
-    await aiProvider.generate(
-      "hook",
-      request,
-      prompt
-    );
+    await runAIProvider("openai", {
+      systemPrompt:
+        "You are ViralClip AI. Generate a viral hook.",
+      userPrompt: prompt,
+      temperature: 0.9,
+      maxTokens: 100,
+    });
 
   return {
-    ...result,
-
+    success: result.success,
     content:
       result.content ||
       "🔥 Wait until the end... this changes everything!",
+    provider: result.provider,
+    model: result.model,
+    tokens: result.tokens,
   };
-
 }

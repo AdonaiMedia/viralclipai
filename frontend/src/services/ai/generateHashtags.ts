@@ -3,7 +3,7 @@ import {
   AIContentResult,
 } from "./types";
 
-import { aiProvider } from "./AIProvider";
+import { runAIProvider } from "./AIProvider";
 import { PromptBuilder } from "./PromptBuilder";
 
 export async function generateHashtags(
@@ -14,18 +14,21 @@ export async function generateHashtags(
     PromptBuilder.hashtags(request);
 
   const result =
-    await aiProvider.generate(
-      "hashtags",
-      request,
-      prompt
-    );
+    await runAIProvider("openai", {
+      systemPrompt:
+        "Generate only hashtags.",
+      userPrompt: prompt,
+      temperature: 0.6,
+      maxTokens: 80,
+    });
 
   return {
-    ...result,
-
+    success: result.success,
     content:
       result.content ||
       "#viral #shorts #reels #fyp",
+    provider: result.provider,
+    model: result.model,
+    tokens: result.tokens,
   };
-
 }

@@ -3,7 +3,7 @@ import {
   AIContentResult,
 } from "./types";
 
-import { aiProvider } from "./AIProvider";
+import { runAIProvider } from "./AIProvider";
 import { PromptBuilder } from "./PromptBuilder";
 
 export async function generateCaption(
@@ -14,18 +14,21 @@ export async function generateCaption(
     PromptBuilder.caption(request);
 
   const result =
-    await aiProvider.generate(
-      "caption",
-      request,
-      prompt
-    );
+    await runAIProvider("openai", {
+      systemPrompt:
+        "You are ViralClip AI. Generate a viral caption.",
+      userPrompt: prompt,
+      temperature: 0.8,
+      maxTokens: 180,
+    });
 
   return {
-    ...result,
-
+    success: result.success,
     content:
       result.content ||
       `Create a viral ${request.platform} caption about ${request.topic}.`,
+    provider: result.provider,
+    model: result.model,
+    tokens: result.tokens,
   };
-
 }

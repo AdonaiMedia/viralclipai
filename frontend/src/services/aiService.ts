@@ -6,7 +6,7 @@ import {
   generateScript,
   calculateViralScore,
   analyzeTrend,
-} from "../ai";
+} from "./ai";
 
 export const AIService = {
   caption: generateCaption,

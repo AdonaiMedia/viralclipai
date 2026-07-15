@@ -1,5 +1,5 @@
 import { Agent } from "./AgentRegistry";
-import { generateCaption } from "@/services/ai/captionGenerator";
+import { generateCaption } from "@/services/ai/generateCaption";
 
 export class CaptionAgent implements Agent {
 
