@@ -1,16 +1,19 @@
 import { runAIOrchestrator } from "@/services/ai/AIOrchestrator";
-import { saveProcessingProgress } from "../database/saveProcessingProgress";
+import { saveProcessingProgress } from "@/services/database/saveProcessingProgress";
 import { supabaseServer } from "@/lib/supabase-server";
 import { emitProcessingEvent } from "@/services/events";
-import { runVideoPipeline } from "../pipelines/VideoPipeline";
-import { runAudioPipeline } from "../pipelines/AudioPipeline";
-import { runTranscriptPipeline } from "../pipelines/TranscriptPipeline";
-import { runClipPipeline } from "../pipelines/ClipPipeline";
-import { runThumbnailPipeline } from "../pipelines/ThumbnailPipeline";
-import { runDatabasePipeline } from "../pipelines/DatabasePipeline";
+import { runVideoPipeline } from "@/services/pipelines/VideoPipeline";
+import { runAudioPipeline } from "@/services/pipelines/AudioPipeline";
+import { runTranscriptPipeline } from "@/services/pipelines/TranscriptPipeline";
+import { runClipPipeline } from "@/services/pipelines/ClipPipeline";
+import { runThumbnailPipeline } from "@/services/pipelines/ThumbnailPipeline";
+import { runDatabasePipeline } from "@/services/pipelines/DatabasePipeline";
 export async function processVideo(
   videoId: number
 ) {
+
+  const startedAt = Date.now();
+
   try {
     console.log("================================");
     console.log("VIRALCLIP AI ENGINE");
@@ -31,7 +34,9 @@ export async function processVideo(
         .single();
 
     if (error) throw error;
-
+if (!video) {
+  throw new Error(`Video ${videoId} not found.`);
+}
     console.log("VIDEO:", video);
 
     await emitProcessingEvent({
@@ -328,30 +333,48 @@ console.log(aiContent);
     console.log("MISSION COMPLETE");
     console.log("================================");
 
-    return {
-      success: true,
-      overallScore,
-      clipsGenerated:
-        generatedClips.length,
-      scoredClips,
-      bestClips,
-    };
+console.log(
+  `TOTAL PROCESSING TIME: ${Date.now() - startedAt} ms`
+);
 
-  } catch (error) {
+return {
+  success: true,
+  overallScore,
+  clipsGenerated: generatedClips.length,
+  scoredClips,
+  bestClips,
+};
 
-    console.error(
-      "PROCESS VIDEO ERROR:",
-      error
-    );
+} catch (error) {
 
-    await supabaseServer
-      .from("videos")
-      .update({
-        status: "failed",
-      })
-      .eq("id", videoId);
+  console.error(
+    "PROCESS VIDEO ERROR:",
+    error
+  );
 
-    throw error;
+  await supabaseServer
+    .from("videos")
+    .update({
+      status: "failed",
+    })
+    .eq("id", videoId);
 
-  }
+  await saveProcessingProgress(
+    videoId,
+    "failed",
+    100,
+    "Processing failed."
+  );
+
+  await emitProcessingEvent({
+    stage: "failed",
+    progress: 100,
+    message: "Processing failed.",
+    createdAt: new Date(),
+  });
+
+ throw error;
+
+}
+
 }

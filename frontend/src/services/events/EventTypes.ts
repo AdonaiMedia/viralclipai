@@ -1,20 +1,19 @@
 export interface ProcessingEvent {
-
   stage:
     | "upload"
     | "inspection"
+    | "audio"
     | "transcription"
     | "analysis"
-    | "viral"
     | "clips"
     | "thumbnails"
-    | "publishing"
-    | "completed";
+    | "database"
+    | "completed"
+    | "failed";
 
   progress: number;
 
   message: string;
 
   createdAt: Date;
-
 }
