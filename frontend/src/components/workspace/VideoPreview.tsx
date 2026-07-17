@@ -96,21 +96,39 @@ export default function VideoPreview({
 
           </div>
 
-          <div className="space-y-2 text-sm">
+          <div className="space-y-3">
 
-            <p className="text-slate-300">
-              <strong>Name:</strong> {video.file_name}
-            </p>
+  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+    <span className="text-slate-400">
+      File Name
+    </span>
 
-            <p className="text-slate-300">
-              <strong>Status:</strong> {video.status}
-            </p>
+    <span className="max-w-[220px] truncate font-medium text-white">
+      {video.file_name}
+    </span>
+  </div>
 
-            <p className="text-slate-300">
-              <strong>ID:</strong> {video.id}
-            </p>
+  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+    <span className="text-slate-400">
+      Status
+    </span>
 
-          </div>
+    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+      {video.status.toUpperCase()}
+    </span>
+  </div>
+
+  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+    <span className="text-slate-400">
+      Video ID
+    </span>
+
+    <span className="font-mono text-blue-300">
+      #{video.id}
+    </span>
+  </div>
+
+</div>
 
         </div>
 
@@ -128,9 +146,62 @@ export default function VideoPreview({
 
           <div className="space-y-3">
 
-            <div className="flex items-center gap-2">
+  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
 
-              <BadgeCheck className="h-5 w-5 text-emerald-400" />
+    <div className="flex items-center gap-2">
+
+      <BadgeCheck className="h-5 w-5 text-emerald-400" />
+
+      <span className="text-slate-300">
+        AI Ready
+      </span>
+
+    </div>
+
+    <span className="text-xs font-semibold text-emerald-400">
+      READY
+    </span>
+
+  </div>
+
+  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+
+    <div className="flex items-center gap-2">
+
+      <HardDrive className="h-5 w-5 text-blue-400" />
+
+      <span className="text-slate-300">
+        Storage
+      </span>
+
+    </div>
+
+    <span className="text-xs text-blue-300">
+      Supabase
+    </span>
+
+  </div>
+
+  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+
+    <div className="flex items-center gap-2">
+
+      <Activity className="h-5 w-5 text-cyan-400" />
+
+      <span className="text-slate-300">
+        Pipeline
+      </span>
+
+    </div>
+
+    <span className="text-xs text-cyan-300">
+      Waiting
+    </span>
+
+  </div>
+
+</div> 
+ <BadgeCheck className="h-5 w-5 text-emerald-400" />
 
               <span className="text-slate-300">
                 Ready for AI Analysis
@@ -150,10 +221,7 @@ export default function VideoPreview({
 
           </div>
 
-        </div>
-
-      </div>
-
-    </Card>
+        
+        </Card>
   );
 }

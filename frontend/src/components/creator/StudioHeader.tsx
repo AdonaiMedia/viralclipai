@@ -5,108 +5,108 @@ import {
   Rocket,
   Activity,
   Cpu,
-  Bell,
 } from "lucide-react";
 
 export default function StudioHeader() {
   return (
-    <header className="relative overflow-hidden rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 shadow-2xl">
+    <header className="relative overflow-hidden rounded-xl border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
 
       {/* Background Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.18),transparent_35%)]" />
 
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(16,185,129,0.12),transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,.15),transparent_40%)]" />
 
-      <div className="relative flex flex-col gap-6 p-7 lg:flex-row lg:items-center lg:justify-between">
+      <div className="relative flex flex-col gap-4 p-4 lg:flex-row lg:items-center lg:justify-between">
 
-        {/* Left */}
-        <div>
+        {/* LEFT */}
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5">
+        <div className="min-w-0">
 
-            <Sparkles className="h-4 w-4 text-blue-400" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1">
 
-            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-blue-300">
+            <Sparkles className="h-3.5 w-3.5 text-blue-400" />
+
+            <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-blue-300">
               ViralClip AI Studio
             </span>
 
           </div>
 
-          <h1 className="mt-4 text-4xl font-extrabold text-white">
+          <h1 className="mt-3 text-2xl font-bold text-white">
             Creator Command Center
           </h1>
 
-          <p className="mt-3 max-w-2xl text-slate-400">
-            Upload one video and let AI detect viral moments,
-            generate captions, titles, thumbnails and publish
-            across all major social platforms automatically.
+          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
+            Upload one video and let AI automatically detect viral moments,
+            generate captions, titles and clips for every platform.
           </p>
 
         </div>
 
-        {/* Right */}
-        <div className="grid grid-cols-2 gap-4 lg:w-[360px]">
+        {/* RIGHT */}
 
-          <div className="rounded-2xl border border-slate-700 bg-slate-900/70 p-4">
+        <div className="grid grid-cols-2 gap-2 lg:w-[260px]">
 
-            <Rocket className="mb-2 h-6 w-6 text-blue-400" />
+          <StatusCard
+            icon={<Rocket className="h-4 w-4 text-blue-400" />}
+            title="Status"
+            value="Ready"
+            valueColor="text-emerald-400"
+          />
 
-            <p className="text-xs uppercase tracking-widest text-slate-500">
-              Status
-            </p>
+          <StatusCard
+            icon={<Cpu className="h-4 w-4 text-violet-400" />}
+            title="AI"
+            value="Online"
+          />
 
-            <h3 className="mt-1 font-bold text-emerald-400">
-              Ready
-            </h3>
+          <StatusCard
+            icon={<Activity className="h-4 w-4 text-orange-400" />}
+            title="Queue"
+            value="0"
+          />
 
-          </div>
-
-          <div className="rounded-2xl border border-slate-700 bg-slate-900/70 p-4">
-
-            <Cpu className="mb-2 h-6 w-6 text-violet-400" />
-
-            <p className="text-xs uppercase tracking-widest text-slate-500">
-              AI Engine
-            </p>
-
-            <h3 className="mt-1 font-bold text-white">
-              Online
-            </h3>
-
-          </div>
-
-          <div className="rounded-2xl border border-slate-700 bg-slate-900/70 p-4">
-
-            <Activity className="mb-2 h-6 w-6 text-orange-400" />
-
-            <p className="text-xs uppercase tracking-widest text-slate-500">
-              Queue
-            </p>
-
-            <h3 className="mt-1 font-bold text-white">
-              0 Jobs
-            </h3>
-
-          </div>
-
-          <div className="rounded-2xl border border-slate-700 bg-slate-900/70 p-4">
-
-            <Bell className="mb-2 h-6 w-6 text-cyan-400" />
-
-            <p className="text-xs uppercase tracking-widest text-slate-500">
-              Notifications
-            </p>
-
-            <h3 className="mt-1 font-bold text-white">
-              Active
-            </h3>
-
-          </div>
+          <StatusCard
+            icon={<Sparkles className="h-4 w-4 text-cyan-400" />}
+            title="Mode"
+            value="Auto"
+          />
 
         </div>
 
       </div>
 
     </header>
+  );
+}
+
+function StatusCard({
+  icon,
+  title,
+  value,
+  valueColor = "text-white",
+}: {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+  valueColor?: string;
+}) {
+  return (
+    <div className="rounded-lg border border-slate-700 bg-slate-900/60 p-2.5">
+
+      <div className="mb-2 flex items-center gap-2">
+
+        {icon}
+
+        <span className="text-[10px] uppercase tracking-wider text-slate-500">
+          {title}
+        </span>
+
+      </div>
+
+      <p className={`text-sm font-semibold ${valueColor}`}>
+        {value}
+      </p>
+
+    </div>
   );
 }

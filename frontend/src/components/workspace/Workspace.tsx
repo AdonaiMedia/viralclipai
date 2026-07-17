@@ -6,9 +6,9 @@ import AITools from "./AITools";
 import ClipGallery from "./ClipGallery";
 
 interface Props {
-  video?: any;
-  analysis?: any;
-  clips?: any[];
+  video?: unknown;
+  analysis?: unknown;
+  clips?: unknown[];
   publicUrl?: string;
 }
 
@@ -19,13 +19,15 @@ export default function Workspace({
   publicUrl = "",
 }: Props) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
 
-      {/* Top */}
+      {/* Top Section */}
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid gap-4 xl:grid-cols-12">
 
-        <div className="xl:col-span-2">
+        {/* Video */}
+
+        <div className="xl:col-span-8">
 
           <VideoPreview
             video={video}
@@ -34,7 +36,9 @@ export default function Workspace({
 
         </div>
 
-        <div>
+        {/* AI Analysis */}
+
+        <div className="xl:col-span-4">
 
           <AIAnalysis
             analysis={analysis}
@@ -58,7 +62,7 @@ export default function Workspace({
         onPublish={() => console.log("Publish")}
       />
 
-      {/* Generated Clips */}
+      {/* Clip Gallery */}
 
       <ClipGallery
         clips={clips}

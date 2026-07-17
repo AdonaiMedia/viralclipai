@@ -1,6 +1,6 @@
 "use client";
 
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Video } from "lucide-react";
 
 import { supabase } from "@/lib/supabase";
 import { DashboardVideo } from "@/types/Dashboard";
@@ -19,53 +19,69 @@ export default function VideosList({
   onGenerate,
   onRefresh,
 }: VideosListProps) {
+
   if (videos.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900 p-10 text-center">
+      <section className="rounded-xl border border-dashed border-slate-700 bg-slate-900 p-8 text-center">
 
-        <h3 className="text-xl font-bold text-white">
+        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-800">
+
+          <Video className="h-7 w-7 text-slate-500" />
+
+        </div>
+
+        <h3 className="text-lg font-semibold text-white">
           No Videos Yet
         </h3>
 
-        <p className="mt-3 text-sm text-slate-400">
-          Upload your first long video and let ViralClip AI create viral clips automatically.
+        <p className="mx-auto mt-2 max-w-md text-sm text-slate-400">
+          Upload your first long video and ViralClip AI will automatically
+          analyze it and generate viral clips.
         </p>
 
-      </div>
+      </section>
     );
   }
 
   return (
-    <section className="space-y-5">
+    <section className="space-y-4">
+
+      {/* Header */}
 
       <div className="flex items-center justify-between">
 
         <div>
 
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-xl font-bold text-white">
             Recent Videos
           </h2>
 
-          <p className="text-sm text-slate-400">
-            {videos.length} video{videos.length !== 1 ? "s" : ""} available
+          <p className="mt-1 text-xs text-slate-500">
+            {videos.length} video{videos.length > 1 ? "s" : ""} available
           </p>
 
         </div>
 
         {onRefresh && (
+
           <button
             onClick={onRefresh}
-            className="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-slate-300 transition hover:border-blue-500 hover:text-white"
+            className="flex h-9 items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 text-xs font-medium text-slate-300 transition hover:border-blue-500 hover:text-white"
           >
+
             <RefreshCw className="h-4 w-4" />
 
             Refresh
+
           </button>
+
         )}
 
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2 2xl:grid-cols-3">
+      {/* Grid */}
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
 
         {videos.map((item) => {
 

@@ -67,52 +67,62 @@ export default function AnalyticsOverview() {
   ];
 
   return (
-    <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
-      {cards.map((item) => {
-        const Icon = item.icon;
+  <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+    {cards.map((item) => {
+      const Icon = item.icon;
 
-        return (
-          <div
-            key={item.title}
-            className={`rounded-2xl border border-slate-800 bg-gradient-to-br ${item.bg} p-5 transition-all duration-300 hover:-translate-y-1 ${item.border}`}
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-widest text-slate-500">
-                  {item.title}
-                </p>
+      return (
+        <div
+          key={item.title}
+          className={`group rounded-xl border border-slate-800 bg-gradient-to-br ${item.bg} p-3 transition-all duration-200 hover:border-slate-600 hover:shadow-lg`}
+        >
+          <div className="flex items-center justify-between">
 
-                {loading ? (
-                  <div className="mt-3 h-8 w-20 animate-pulse rounded-lg bg-slate-700" />
-                ) : (
-                  <h2 className="mt-2 text-3xl font-bold text-white">
-                    {item.value}
-                  </h2>
-                )}
+            <div className="min-w-0">
 
-                {!loading && (
-                  <div className="mt-3 flex items-center gap-1 text-xs text-emerald-400">
-                    <ArrowUpRight className="h-3 w-3" />
-                    Live
-                  </div>
-                )}
-              </div>
+              <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500">
+                {item.title}
+              </p>
 
-              <div className="rounded-xl bg-slate-900/70 p-3">
-                <Icon
-                  className={`h-6 w-6 ${item.color} ${
-                    loading
-                      ? "animate-pulse"
-                      : item.title === "Processing"
-                      ? "animate-spin"
-                      : ""
-                  }`}
-                />
-              </div>
+              {loading ? (
+                <div className="mt-2 h-6 w-14 animate-pulse rounded bg-slate-700" />
+              ) : (
+                <h2 className="mt-1 text-2xl font-bold text-white">
+                  {item.value}
+                </h2>
+              )}
+
             </div>
+
+            <div className="rounded-lg bg-slate-900/70 p-2">
+
+              <Icon
+                className={`h-5 w-5 ${item.color} ${
+                  loading
+                    ? "animate-pulse"
+                    : item.title === "Processing"
+                    ? "animate-spin"
+                    : ""
+                }`}
+              />
+
+            </div>
+
           </div>
-        );
-      })}
-    </section>
-  );
+
+          {!loading && (
+            <div className="mt-2 flex items-center gap-1 text-[10px] text-emerald-400">
+
+              <ArrowUpRight className="h-3 w-3" />
+
+              <span>Live</span>
+
+            </div>
+          )}
+
+        </div>
+      );
+    })}
+  </section>
+);
 }

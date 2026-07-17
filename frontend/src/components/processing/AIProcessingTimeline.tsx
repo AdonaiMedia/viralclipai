@@ -29,149 +29,141 @@ export default function AIProcessingTimeline({
       ? 0
       : Math.round((completed / steps.length) * 100);
 
-  return (
-    <section className="rounded-2xl border border-slate-800 bg-slate-900 p-5 shadow-xl">
+ return (
+  <section className="rounded-xl border border-slate-800 bg-slate-900 p-4 shadow-md">
 
-      {/* Header */}
+    {/* Header */}
 
-      <div className="mb-5 flex items-center justify-between">
+    <div className="mb-3 flex items-center justify-between">
 
-        <div>
+      <div>
 
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
 
-            <Sparkles className="h-5 w-5 text-blue-400" />
+          <Sparkles className="h-4 w-4 text-blue-400" />
 
-            <h2 className="text-lg font-bold text-white">
-              AI Processing Pipeline
-            </h2>
-
-          </div>
-
-          <p className="mt-1 text-xs text-slate-500">
-            AI is processing your video step by step
-          </p>
+          <h2 className="text-base font-semibold text-white">
+            AI Pipeline
+          </h2>
 
         </div>
 
-        <div className="text-right">
-
-          <p className="text-2xl font-bold text-white">
-            {percent}%
-          </p>
-
-          <p className="text-xs text-slate-500">
-            {completed}/{steps.length} Complete
-          </p>
-
-        </div>
+        <p className="mt-1 text-[11px] text-slate-500">
+          Processing workflow
+        </p>
 
       </div>
 
-      {/* Progress */}
+      <div className="text-right">
 
-      <div className="mb-6 h-2 overflow-hidden rounded-full bg-slate-800">
+        <p className="text-lg font-bold text-white">
+          {percent}%
+        </p>
 
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-700"
-          style={{
-            width: `${percent}%`,
-          }}
-        />
+        <p className="text-[11px] text-slate-500">
+          {completed}/{steps.length}
+        </p>
 
       </div>
 
-      {/* Steps */}
+    </div>
 
-      <div className="space-y-3">
+    {/* Progress */}
 
-        {steps.map((step, index) => {
+    <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-slate-800">
 
-          const done =
-            step.status === "completed";
+      <div
+        className="h-full rounded-full bg-gradient-to-r from-blue-500 via-cyan-400 to-emerald-400 transition-all duration-700"
+        style={{
+          width: `${percent}%`,
+        }}
+      />
 
-          const running =
-            step.status === "running";
+    </div>
 
-          return (
+    {/* Steps */}
 
-            <div key={step.id}>
+    <div className="space-y-2">
 
-              <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950/60 px-4 py-3 transition hover:border-blue-500/30">
+      {steps.map((step) => {
 
-                <div className="flex items-center gap-3">
+        const done = step.status === "completed";
+        const running = step.status === "running";
 
-                  {done ? (
+        return (
 
-                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+          <div
+            key={step.id}
+            className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/50 px-3 py-2"
+          >
 
-                  ) : running ? (
+            <div className="flex items-center gap-2">
 
-                    <Loader2 className="h-5 w-5 animate-spin text-blue-400" />
+              {done ? (
 
-                  ) : (
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
 
-                    <Circle className="h-5 w-5 text-slate-600" />
+              ) : running ? (
 
-                  )}
+                <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
 
-                  <div>
+              ) : (
 
-                    <p
-                      className={`font-medium ${
-                        done
-                          ? "text-white"
-                          : running
-                          ? "text-blue-300"
-                          : "text-slate-500"
-                      }`}
-                    >
-                      {step.title}
-                    </p>
+                <Circle className="h-4 w-4 text-slate-600" />
 
-                    <p className="text-xs text-slate-500">
-                      {done
-                        ? "Completed successfully"
-                        : running
-                        ? "AI is working..."
-                        : "Waiting..."}
-                    </p>
+              )}
 
-                  </div>
+              <div>
 
-                </div>
-
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                <p
+                  className={`text-sm font-medium ${
                     done
-                      ? "bg-emerald-500/10 text-emerald-400"
+                      ? "text-white"
                       : running
-                      ? "bg-blue-500/10 text-blue-400"
-                      : "bg-slate-800 text-slate-500"
+                      ? "text-blue-300"
+                      : "text-slate-500"
                   }`}
                 >
+                  {step.title}
+                </p>
+
+                <p className="text-[10px] text-slate-500">
                   {done
-                    ? "Done"
+                    ? "Completed"
                     : running
-                    ? "Running"
+                    ? "Running..."
                     : "Waiting"}
-                </span>
+                </p>
 
               </div>
 
-              {index !== steps.length - 1 && (
-                <div className="flex justify-center py-1">
-                  <ArrowRight className="h-4 w-4 text-slate-700" />
-                </div>
-              )}
-
             </div>
 
-          );
-        })}
+            <span
+              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                done
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : running
+                  ? "bg-blue-500/10 text-blue-400"
+                  : "bg-slate-800 text-slate-500"
+              }`}
+            >
+              {done
+                ? "Done"
+                : running
+                ? "Running"
+                : "Wait"}
+            </span>
 
-      </div>
+          </div>
 
-    </section>
-  );
+        );
+
+      })}
+
+    </div>
+
+  </section>
+);
+
 }

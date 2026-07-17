@@ -109,63 +109,59 @@ export default function CreatorCommandCenter() {
     }, 700);
   }
 
-  return (
-    <div className="space-y-5">
+ return (
+  <div className="mx-auto max-w-7xl space-y-4 px-4 pb-6 lg:px-6">
 
-      {/* Header */}
-      <StudioHeader />
+    <StudioHeader />
 
-      {/* Analytics */}
-      <AnalyticsOverview />
+    <AnalyticsOverview />
 
-      {/* Upload + Processing */}
-      <div className="grid gap-5 xl:grid-cols-3">
+    <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
 
-        <div className="xl:col-span-2">
+      <div>
 
-          <UploadCard
-            onSelectFile={setFile}
-            onUpload={handleUpload}
-          />
-
-        </div>
-
-        <div className="space-y-4">
-
-          <AIProcessingTimeline
-            steps={steps}
-          />
-
-          {uploading && (
-
-            <ProcessingProgress
-              percentage={15}
-              message="Uploading video..."
-            />
-
-          )}
-
-        </div>
+        <UploadCard
+          onSelectFile={setFile}
+          onUpload={handleUpload}
+        />
 
       </div>
 
-      {/* Uploaded Videos */}
+      <div className="space-y-3">
 
-      <VideosList
-        videos={videos}
-        onDelete={async (fileName, id) => {
-          await deleteVideo(fileName, id);
-          await loadVideos();
-        }}
-        onGenerate={async (id) => {
-          const result = await generateClip(id);
+        <AIProcessingTimeline
+          steps={steps}
+        />
 
-          alert(result.message);
+        {uploading && (
 
-          await loadVideos();
-        }}
-      />
+          <ProcessingProgress
+            percentage={15}
+            message="Uploading video..."
+          />
+
+        )}
+
+      </div>
 
     </div>
-  );
+
+    <VideosList
+      videos={videos}
+      onDelete={async (fileName, id) => {
+        await deleteVideo(fileName, id);
+        await loadVideos();
+      }}
+      onGenerate={async (id) => {
+        const result = await generateClip(id);
+
+        alert(result.message);
+
+        await loadVideos();
+      }}
+    />
+
+  </div>
+);
+
 }

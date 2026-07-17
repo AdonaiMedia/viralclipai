@@ -16,7 +16,7 @@ export default function StatsCards({
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
 
-      <div className="bg-slate-800 rounded-xl p-6">
+      <div className="bg-slate-700 rounded-xl p-6">
         <h3 className="text-gray-400">Videos</h3>
         <p className="text-4xl font-bold">
           {totalVideos}
