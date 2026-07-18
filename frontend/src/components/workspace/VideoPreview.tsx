@@ -42,8 +42,6 @@ export default function VideoPreview({
   return (
     <Card>
 
-      {/* Header */}
-
       <div className="mb-5 flex items-center justify-between">
 
         <div>
@@ -64,23 +62,29 @@ export default function VideoPreview({
 
       </div>
 
-      {/* Video */}
-
       <div className="overflow-hidden rounded-xl border border-slate-700 bg-black">
 
-        <video
-          controls
-          className="aspect-video w-full"
-        >
-          <source
-            src={publicUrl}
-            type="video/mp4"
-          />
-        </video>
+        {publicUrl ? (
+
+          <video
+            controls
+            className="aspect-video w-full"
+          >
+            <source
+              src={publicUrl}
+              type="video/mp4"
+            />
+          </video>
+
+        ) : (
+
+          <div className="flex aspect-video items-center justify-center text-slate-400">
+            Video file not available.
+          </div>
+
+        )}
 
       </div>
-
-      {/* Information */}
 
       <div className="mt-5 grid gap-4 md:grid-cols-2">
 
@@ -98,41 +102,46 @@ export default function VideoPreview({
 
           <div className="space-y-3">
 
-  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
-    <span className="text-slate-400">
-      File Name
-    </span>
+            <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
 
-    <span className="max-w-[220px] truncate font-medium text-white">
-      {video.file_name}
-    </span>
-  </div>
+              <span className="text-slate-400">
+                File Name
+              </span>
 
-  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
-    <span className="text-slate-400">
-      Status
-    </span>
+              <span className="max-w-[220px] truncate font-medium text-white">
+                {video.file_name}
+              </span>
 
-    <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
-      {video.status.toUpperCase()}
-    </span>
-  </div>
+            </div>
 
-  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
-    <span className="text-slate-400">
-      Video ID
-    </span>
+            <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
 
-    <span className="font-mono text-blue-300">
-      #{video.id}
-    </span>
-  </div>
+              <span className="text-slate-400">
+                Status
+              </span>
 
-</div>
+              <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
+                {video.status?.toUpperCase()}
+              </span>
+
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+
+              <span className="text-slate-400">
+                Video ID
+              </span>
+
+              <span className="font-mono text-blue-300">
+                #{video.id}
+              </span>
+
+            </div>
+
+          </div>
 
         </div>
-
-        <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
+                <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
 
           <div className="mb-3 flex items-center gap-2">
 
@@ -146,82 +155,66 @@ export default function VideoPreview({
 
           <div className="space-y-3">
 
-  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+            <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
 
-    <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
 
-      <BadgeCheck className="h-5 w-5 text-emerald-400" />
+                <BadgeCheck className="h-5 w-5 text-emerald-400" />
 
-      <span className="text-slate-300">
-        AI Ready
-      </span>
+                <span className="text-slate-300">
+                  AI Ready
+                </span>
 
-    </div>
+              </div>
 
-    <span className="text-xs font-semibold text-emerald-400">
-      READY
-    </span>
-
-  </div>
-
-  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
-
-    <div className="flex items-center gap-2">
-
-      <HardDrive className="h-5 w-5 text-blue-400" />
-
-      <span className="text-slate-300">
-        Storage
-      </span>
-
-    </div>
-
-    <span className="text-xs text-blue-300">
-      Supabase
-    </span>
-
-  </div>
-
-  <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
-
-    <div className="flex items-center gap-2">
-
-      <Activity className="h-5 w-5 text-cyan-400" />
-
-      <span className="text-slate-300">
-        Pipeline
-      </span>
-
-    </div>
-
-    <span className="text-xs text-cyan-300">
-      Waiting
-    </span>
-
-  </div>
-
-</div> 
- <BadgeCheck className="h-5 w-5 text-emerald-400" />
-
-              <span className="text-slate-300">
-                Ready for AI Analysis
+              <span className="text-xs font-semibold text-emerald-400">
+                READY
               </span>
 
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
 
-              <HardDrive className="h-5 w-5 text-blue-400" />
+              <div className="flex items-center gap-2">
 
-              <span className="text-slate-300">
-                Stored in Supabase Storage
+                <HardDrive className="h-5 w-5 text-blue-400" />
+
+                <span className="text-slate-300">
+                  Storage
+                </span>
+
+              </div>
+
+              <span className="text-xs text-blue-300">
+                Supabase
+              </span>
+
+            </div>
+
+            <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
+
+              <div className="flex items-center gap-2">
+
+                <Activity className="h-5 w-5 text-cyan-400" />
+
+                <span className="text-slate-300">
+                  Pipeline
+                </span>
+
+              </div>
+
+              <span className="text-xs text-cyan-300">
+                {video.status ?? "Waiting"}
               </span>
 
             </div>
 
           </div>
 
-        
-        </Card>
+        </div>
+
+      </div>
+
+    </Card>
   );
 }

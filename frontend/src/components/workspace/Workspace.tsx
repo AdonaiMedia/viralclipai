@@ -5,10 +5,17 @@ import AIAnalysis from "./AIAnalysis";
 import AITools from "./AITools";
 import ClipGallery from "./ClipGallery";
 
+interface Clip {
+  id: number | string;
+  start_time: number;
+  end_time: number;
+  viral_score?: number;
+}
+
 interface Props {
   video?: unknown;
   analysis?: unknown;
-  clips?: unknown[];
+  clips?: Clip[];
   publicUrl?: string;
 }
 
@@ -65,6 +72,7 @@ export default function Workspace({
       {/* Clip Gallery */}
 
       <ClipGallery
+      
         clips={clips}
       />
 
