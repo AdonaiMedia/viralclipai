@@ -64,13 +64,74 @@ export default function Workspace({
         alert(result.message);
         return;
       }
+if (result.data?.title) {
+  alert(result.data.title);
+  return;
+}
 
-      if (result.data?.title) {
-        alert(result.data.title);
-        return;
-      }
+if (result.data?.hook) {
+  alert(result.data.hook);
+  return;
+}
 
-      alert(result.message ?? "Completed");
+if (result.data?.caption) {
+  alert(result.data.caption);
+  return;
+}
+
+if (result.data?.hashtags) {
+  alert(result.data.hashtags.join(" "));
+  return;
+}
+
+if (result.data?.transcript) {
+  alert(result.data.transcript);
+  return;
+}
+
+if (result.data?.translation) {
+  alert(result.data.translation);
+  return;
+}
+
+if (result.data?.script) {
+  alert(result.data.script);
+  return;
+}
+
+if (result.data?.analysis) {
+  const analysis = result.data.analysis;
+
+  alert(
+`Viral Score: ${analysis.score}
+
+Engagement: ${analysis.engagement}
+
+Strengths:
+- ${analysis.strengths.join("\n- ")}
+
+Improvements:
+- ${analysis.improvements.join("\n- ")}`
+  );
+
+  return;
+}
+if (result.data?.platforms) {
+  alert(
+`✅ Ready to Publish
+
+Platforms:
+
+- ${result.data.platforms.join("\n- ")}`
+  );
+
+  return;
+}
+alert(result.message ?? "Completed");
+alert(result.message ?? "Completed");
+alert(result.message ?? "Completed");
+
+alert(result.message ?? "Completed");
     } catch (error) {
       console.error(error);
       alert("AI request failed.");
