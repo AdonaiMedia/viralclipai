@@ -1,7 +1,6 @@
+import { saveAIResult } from "@/services/database/saveAIResult";
 import { generateMockPublish } from "@/services/ai/mock/publish";
-
 import { generateMockViralAnalysis } from "@/services/ai/mock/viralAnalysis";
-
 import { generateMockTitle } from "@/services/ai/mock/generateTitle";
 import { generateMockHook } from "@/services/ai/mock/generateHook";
 import { generateMockCaption } from "@/services/ai/mock/generateCaption";
@@ -42,12 +41,18 @@ export async function POST(request: NextRequest) {
 if (action === "title") {
   const result = await generateMockTitle();
 
+  await saveAIResult({
+    videoId,
+    tool: "title",
+    title: "Generated Title",
+    content: result.title,
+  });
+
   return NextResponse.json({
     success: result.success,
     message: "Title generated successfully.",
     data: {
       title: result.title,
-      
     },
   });
 }

@@ -1,5 +1,6 @@
 "use client";
-
+import AIResults from "./AIResults";
+import AIHistory from "./AIHistory";
 import { useState } from "react";
 
 import VideoPreview from "./VideoPreview";
@@ -31,8 +32,41 @@ export default function Workspace({
   clips = [],
   publicUrl = "",
 }: Props) {
-  const [loading, setLoading] = useState(false);
+ const [loading, setLoading] = useState(false);
 
+const [resultTitle, setResultTitle] = useState("");
+
+const [resultContent, setResultContent] = useState("");
+
+const [history, setHistory] = useState<
+  {
+    title: string;
+    content: string;
+  }[]
+>([]);
+function saveResult(
+  title: string,
+  content: string
+) {
+  setResultTitle(title);
+
+  setResultContent(content);
+
+  setHistory((previous) => [
+    {
+      title,
+      content,
+    },
+    ...previous,
+  ]);
+}
+function selectHistory(item: {
+  title: string;
+  content: string;
+}) {
+  setResultTitle(item.title);
+  setResultContent(item.content);
+}
   async function runAI(action: string) {
     if (!video) {
       alert("No video selected.");
@@ -60,49 +94,75 @@ export default function Workspace({
       console.log("================================");
       console.log(result);
 
-      if (!result.success) {
-        alert(result.message);
-        return;
-      }
+
 if (result.data?.title) {
-  alert(result.data.title);
+  saveResult(
+    "Generated Title",
+    result.data.title
+  );
+
   return;
 }
 
 if (result.data?.hook) {
-  alert(result.data.hook);
+  saveResult(
+    "Generated Hook",
+    result.data.hook
+  );
+
   return;
 }
 
 if (result.data?.caption) {
-  alert(result.data.caption);
+  saveResult(
+    "Generated Caption",
+    result.data.caption
+  );
+
   return;
 }
 
 if (result.data?.hashtags) {
-  alert(result.data.hashtags.join(" "));
+  saveResult(
+    "Generated Hashtags",
+    result.data.hashtags
+  );
+
   return;
 }
 
 if (result.data?.transcript) {
-  alert(result.data.transcript);
+  saveResult(
+    "Generated Transcript",
+    result.data.transcript
+  );
+
   return;
 }
 
 if (result.data?.translation) {
-  alert(result.data.translation);
+  saveResult(
+    "Translation",
+    result.data.translation
+  );
+
   return;
 }
 
 if (result.data?.script) {
-  alert(result.data.script);
+  saveResult(
+    "Voice Over",
+    result.data.script
+  );
+
   return;
 }
 
 if (result.data?.analysis) {
   const analysis = result.data.analysis;
 
-  alert(
+  saveResult(
+    "Viral Analysis",
 `Viral Score: ${analysis.score}
 
 Engagement: ${analysis.engagement}
@@ -116,30 +176,29 @@ Improvements:
 
   return;
 }
-if (result.data?.platforms) {
-  alert(
-`✅ Ready to Publish
 
-Platforms:
+if (result.data?.platforms) {
+  saveResult(
+    "Ready to Publish",
+`Platforms:
 
 - ${result.data.platforms.join("\n- ")}`
   );
 
   return;
 }
-alert(result.message ?? "Completed");
-alert(result.message ?? "Completed");
-alert(result.message ?? "Completed");
 
-alert(result.message ?? "Completed");
-    } catch (error) {
-      console.error(error);
-      alert("AI request failed.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
+saveResult(
+  "AI",
+  result.message ?? "Completed"
+);
+} catch (error) {
+  console.error(error);
+  alert("AI request failed.");
+} finally {
+  setLoading(false);
+}
+}
   return (
     <div className="space-y-4">
       <div className="grid gap-4 xl:grid-cols-12">
@@ -170,10 +229,32 @@ alert(result.message ?? "Completed");
       />
 
       {loading && (
-        <div className="rounded-xl bg-blue-600 p-3 text-center text-white">
-          AI is processing...
-        </div>
-      )}
+  <div className="rounded-xl bg-blue-600 p-3 text-center text-white">
+    AI is processing...
+  </div>
+)}
+
+<div className="grid gap-4 lg:grid-cols-3">
+
+  <div className="lg:col-span-2">
+    <AIResults
+      title={resultTitle}
+      result={resultContent}
+    />
+  </div>
+
+  <div>
+    <AIHistory
+      history={history}
+      onSelect={selectHistory}
+    />
+  </div>
+
+</div>
+
+<ClipGallery clips={clips} />
+
+
 
       <ClipGallery clips={clips} />
     </div>
