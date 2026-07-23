@@ -6,8 +6,9 @@ const plans = [
     price: "$0",
     description: "Perfect for getting started.",
     featured: false,
+    button: "Start Free",
     features: [
-      "3 videos / month",
+      "3 Videos / Month",
       "720p Export",
       "Watermark",
       "Basic AI Tools",
@@ -18,27 +19,30 @@ const plans = [
     price: "$19",
     description: "Best for creators and influencers.",
     featured: true,
+    button: "Start Pro",
     features: [
       "Unlimited Videos",
       "1080p Export",
       "No Watermark",
       "All AI Tools",
-      "Auto Captions",
+      "AI Captions",
       "Priority Processing",
       "AI Viral Score",
+      "AI Voice Over",
     ],
   },
   {
     name: "Business",
     price: "$49",
-    description: "For agencies and teams.",
+    description: "For agencies and growing teams.",
     featured: false,
+    button: "Contact Sales",
     features: [
       "Everything in Pro",
-      "Team Members",
+      "Unlimited Team Members",
       "API Access",
+      "Analytics Dashboard",
       "Priority Support",
-      "Analytics",
       "White Label",
     ],
   },
@@ -46,21 +50,27 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <section className="bg-slate-900 py-24">
+    <section
+      id="pricing"
+      className="bg-slate-950 py-28"
+    >
       <div className="mx-auto max-w-7xl px-6">
 
-        <div className="mb-16 text-center">
+        <div className="mx-auto mb-20 max-w-3xl text-center">
 
-          <p className="mb-3 font-semibold text-red-500">
-            PRICING
-          </p>
+          <span className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-400">
+            Pricing
+          </span>
 
-          <h2 className="text-4xl font-bold text-white">
-            Simple Pricing For Every Creator
+          <h2 className="mt-6 text-4xl font-bold text-white md:text-5xl">
+            Simple Pricing For
+            <span className="text-red-500">
+              {" "}Every Creator
+            </span>
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-slate-400">
-            Start free and upgrade whenever your content starts growing.
+          <p className="mt-6 text-lg text-slate-400">
+            Start free today and upgrade only when you're ready to scale your content.
           </p>
 
         </div>
@@ -71,24 +81,28 @@ export default function Pricing() {
 
             <div
               key={plan.name}
-              className={`rounded-3xl border p-8 transition ${
+              className={`relative rounded-3xl border p-8 transition-all duration-300 hover:-translate-y-2 ${
                 plan.featured
-                  ? "border-red-500 bg-slate-950 scale-105"
-                  : "border-slate-800 bg-slate-950"
+                  ? "border-red-500 bg-slate-900 shadow-[0_0_40px_rgba(239,68,68,0.15)]"
+                  : "border-slate-800 bg-slate-900 hover:border-red-500/40"
               }`}
             >
 
               {plan.featured && (
-                <div className="mb-6 inline-flex rounded-full bg-red-500 px-4 py-1 text-sm font-semibold text-white">
-                  MOST POPULAR
+
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white">
+
+                  Most Popular
+
                 </div>
+
               )}
 
-              <h3 className="text-3xl font-bold text-white">
+              <h3 className="mt-4 text-3xl font-bold text-white">
                 {plan.name}
               </h3>
 
-              <p className="mt-2 text-slate-400">
+              <p className="mt-3 text-slate-400">
                 {plan.description}
               </p>
 
@@ -113,7 +127,7 @@ export default function Pricing() {
                     className="flex items-center gap-3 text-slate-300"
                   >
 
-                    <Check className="h-5 w-5 text-green-500" />
+                    <Check className="h-5 w-5 text-emerald-400" />
 
                     {feature}
 
@@ -130,7 +144,7 @@ export default function Pricing() {
                     : "border border-slate-700 text-white hover:border-red-500"
                 }`}
               >
-                Get Started
+                {plan.button}
               </button>
 
             </div>

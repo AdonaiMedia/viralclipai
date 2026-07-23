@@ -10,6 +10,8 @@ import {
   FileText,
   TrendingUp,
   Send,
+  ChevronRight,
+  BrainCircuit,
 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
@@ -31,6 +33,7 @@ interface ToolItem {
   description: string;
   icon: React.ElementType;
   color: string;
+  category: string;
   action?: () => void;
 }
 
@@ -48,127 +51,202 @@ export default function AITools({
   const tools: ToolItem[] = [
     {
       title: "Generate Title",
-      description: "Create high CTR viral titles.",
+      description: "High CTR YouTube titles.",
       icon: Type,
       color: "text-blue-400",
+      category: "Writing",
       action: onGenerateTitle,
     },
     {
       title: "Generate Hook",
-      description: "Create attention-grabbing hooks.",
+      description: "First 3 seconds optimization.",
       icon: Sparkles,
       color: "text-yellow-400",
+      category: "Writing",
       action: onGenerateHook,
     },
     {
       title: "Generate Caption",
-      description: "Write engaging social captions.",
+      description: "Social media captions.",
       icon: MessageSquare,
-      color: "text-emerald-400",
+      color: "text-green-400",
+      category: "Writing",
       action: onGenerateCaption,
     },
     {
       title: "Generate Hashtags",
-      description: "Find trending hashtags automatically.",
+      description: "Trending hashtag research.",
       icon: Hash,
       color: "text-pink-400",
+      category: "SEO",
       action: onGenerateHashtags,
     },
     {
       title: "Transcript",
-      description: "Convert speech into text.",
+      description: "Speech to text.",
       icon: FileText,
       color: "text-cyan-400",
+      category: "AI",
       action: onGenerateTranscript,
     },
     {
       title: "Translate",
-      description: "Translate your content instantly.",
+      description: "Translate content instantly.",
       icon: Languages,
       color: "text-orange-400",
+      category: "Language",
       action: onTranslate,
     },
     {
       title: "Voice Over",
-      description: "Generate natural AI voice.",
+      description: "Generate AI narration.",
       icon: Mic,
       color: "text-violet-400",
+      category: "Voice",
       action: onVoiceOver,
     },
     {
       title: "Viral Analysis",
-      description: "Predict viral performance.",
+      description: "Predict engagement.",
       icon: TrendingUp,
-      color: "text-green-400",
+      color: "text-emerald-400",
+      category: "Analytics",
       action: onAnalyze,
     },
     {
       title: "Publish",
-      description: "Publish to all social platforms.",
+      description: "Publish everywhere.",
       icon: Send,
       color: "text-red-400",
+      category: "Distribution",
       action: onPublish,
     },
   ];
 
-  return (    <Card>
-      <div className="mb-6 flex items-center justify-between">
+  return (
+    <Card>
+      <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
         <div>
-          <h2 className="text-2xl font-bold text-white">
-            AI Toolbox
+
+          <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-2">
+
+            <BrainCircuit className="h-4 w-4 text-orange-400" />
+
+            <span className="text-xs font-bold uppercase tracking-widest text-orange-400">
+              ViralClip AI Workspace
+            </span>
+
+          </div>
+
+          <h2 className="mt-5 text-3xl font-bold text-white">
+            AI Command Center
           </h2>
 
-          <p className="text-sm text-slate-400">
-            Professional AI tools to optimize your content.
+          <p className="mt-3 max-w-2xl text-slate-400">
+            Generate titles, captions, hooks, translations, transcripts,
+            voice overs and publish content using one intelligent workspace.
           </p>
+
         </div>
 
-        <div className="rounded-full bg-emerald-500/10 px-3 py-1">
-          <span className="text-xs font-semibold text-emerald-400">
-            9 AI Tools
-          </span>
+        <div className="grid grid-cols-3 gap-3">
+
+          <Stat
+            label="Tools"
+            value="9"
+          />
+
+          <Stat
+            label="Status"
+            value="Ready"
+          />
+
+          <Stat
+            label="AI"
+            value="Online"
+          />
+
         </div>
+
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+
         {tools.map((tool) => {
+
           const Icon = tool.icon;
 
           return (
-            <div
+
+            <button
               key={tool.title}
-              className="group rounded-2xl border border-slate-800 bg-slate-900 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/40"
+              type="button"
+              onClick={() => tool.action?.()}
+              className="group rounded-3xl border border-[#453024] bg-[#15100c] p-6 text-left transition-all duration-300 hover:-translate-y-2 hover:border-orange-500 hover:shadow-2xl"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-800">
-                  <Icon className={`h-6 w-6 ${tool.color}`} />
+
+              <div className="flex items-center justify-between">
+
+                <div
+                  className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-[#201712] ${tool.color}`}
+                >
+                  <Icon className="h-7 w-7" />
                 </div>
 
-                <span className="rounded-full bg-blue-500/10 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-blue-400">
-                  AI
+                <span className="rounded-full border border-slate-700 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  {tool.category}
                 </span>
+
               </div>
 
-              <h3 className="mt-5 font-bold text-white">
+              <h3 className="mt-6 text-xl font-bold text-white">
                 {tool.title}
               </h3>
 
-              <p className="mt-2 text-sm leading-6 text-slate-400">
+              <p className="mt-3 min-h-[52px] text-sm leading-6 text-slate-400">
                 {tool.description}
               </p>
 
-              <button
-                type="button"
-                onClick={() => tool.action?.()}
-                className="mt-5 w-full rounded-xl bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
-              >
-                Run AI
-              </button>
-            </div>
+              <div className="mt-6 flex items-center justify-between">
+
+                <span className="text-sm font-semibold text-orange-400">
+                  Launch Tool
+                </span>
+
+                <ChevronRight className="h-5 w-5 text-orange-400 transition group-hover:translate-x-2" />
+
+              </div>
+
+            </button>
+
           );
+
         })}
+
       </div>
     </Card>
   );
 }
 
+function Stat({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-[#453024] bg-[#15100c] px-5 py-4 text-center">
+
+      <div className="text-2xl font-bold text-white">
+        {value}
+      </div>
+
+      <div className="mt-1 text-xs uppercase tracking-widest text-slate-500">
+        {label}
+      </div>
+
+    </div>
+  );
+}

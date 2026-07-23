@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import {
+  ChevronDown,
+  HelpCircle,
+} from "lucide-react";
 
 const faqs = [
   {
@@ -35,28 +38,38 @@ export default function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="bg-slate-900 py-24">
+    <section
+      id="faq"
+      className="bg-slate-950 py-28"
+    >
       <div className="mx-auto max-w-4xl px-6">
 
-        <div className="mb-16 text-center">
+        <div className="mx-auto mb-20 max-w-3xl text-center">
 
-          <p className="mb-3 font-semibold text-red-500">
+          <span className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-400">
             FAQ
-          </p>
+          </span>
 
-          <h2 className="text-4xl font-bold text-white">
-            Frequently Asked Questions
+          <h2 className="mt-6 text-4xl font-bold text-white md:text-5xl">
+            Frequently Asked
+            <span className="text-red-500">
+              {" "}Questions
+            </span>
           </h2>
+
+          <p className="mt-6 text-lg text-slate-400">
+            Everything you need to know about ViralClip AI before getting started.
+          </p>
 
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-5">
 
           {faqs.map((faq, index) => (
 
             <div
               key={faq.question}
-              className="rounded-2xl border border-slate-800 bg-slate-950"
+              className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition-all duration-300 hover:border-red-500/40"
             >
 
               <button
@@ -66,12 +79,18 @@ export default function FAQ() {
                 className="flex w-full items-center justify-between p-6 text-left"
               >
 
-                <span className="font-semibold text-white">
-                  {faq.question}
-                </span>
+                <div className="flex items-center gap-3">
+
+                  <HelpCircle className="h-5 w-5 text-red-400" />
+
+                  <span className="font-semibold text-white">
+                    {faq.question}
+                  </span>
+
+                </div>
 
                 <ChevronDown
-                  className={`transition ${
+                  className={`h-5 w-5 text-slate-400 transition-transform duration-300 ${
                     open === index ? "rotate-180" : ""
                   }`}
                 />
@@ -80,8 +99,10 @@ export default function FAQ() {
 
               {open === index && (
 
-                <div className="border-t border-slate-800 px-6 pb-6 pt-4 text-slate-400 leading-7">
+                <div className="border-t border-slate-800 px-6 pb-6 pt-5 leading-8 text-slate-400">
+
                   {faq.answer}
+
                 </div>
 
               )}

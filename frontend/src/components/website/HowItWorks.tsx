@@ -8,53 +8,56 @@ import {
 const steps = [
   {
     icon: Upload,
-    title: "Upload Video",
+    title: "Upload Your Video",
     description:
-      "Upload your long-form video from your computer.",
+      "Upload any long-form video from your computer or cloud storage.",
   },
   {
     icon: Brain,
     title: "AI Analysis",
     description:
-      "Our AI analyzes the transcript, engagement and viral moments.",
+      "ViralClip AI analyzes speech, scenes, engagement potential and viral moments.",
   },
   {
     icon: Scissors,
-    title: "Generate Clips",
+    title: "Generate Viral Clips",
     description:
-      "Automatically create multiple short videos with captions.",
+      "Automatically create multiple short clips with captions, titles and hashtags.",
   },
   {
     icon: Share2,
-    title: "Export Anywhere",
+    title: "Export & Publish",
     description:
-      "Download or publish to TikTok, Reels, Shorts and Facebook.",
+      "Download or publish directly to TikTok, Instagram Reels, YouTube Shorts and Facebook.",
   },
 ];
 
 export default function HowItWorks() {
   return (
-    <section className="bg-slate-900 py-24">
+    <section className="bg-slate-900 py-28">
       <div className="mx-auto max-w-7xl px-6">
 
-        <div className="mb-16 text-center">
+        <div className="mx-auto mb-20 max-w-3xl text-center">
 
-          <p className="mb-3 font-semibold text-red-500">
-            HOW IT WORKS
-          </p>
+          <span className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-sm text-red-400">
+            How It Works
+          </span>
 
-          <h2 className="text-4xl font-bold text-white">
-            Create Viral Content In Four Simple Steps
+          <h2 className="mt-6 text-4xl font-bold text-white md:text-5xl">
+            From Long Videos To
+            <span className="text-red-500">
+              {" "}Viral Shorts
+            </span>
           </h2>
 
-          <p className="mx-auto mt-6 max-w-2xl text-slate-400">
-            From one long video to multiple viral-ready clips in just a few
-            minutes.
+          <p className="mt-6 text-lg text-slate-400">
+            Create professional short-form content in minutes with a simple
+            four-step AI workflow.
           </p>
 
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
 
           {steps.map((step, index) => {
             const Icon = step.icon;
@@ -62,18 +65,20 @@ export default function HowItWorks() {
             return (
               <div
                 key={step.title}
-                className="rounded-3xl border border-slate-800 bg-slate-950 p-8 transition hover:border-red-500"
+                className="group relative rounded-3xl border border-slate-800 bg-slate-950 p-8 transition-all duration-300 hover:-translate-y-2 hover:border-red-500/40"
               >
 
-                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10">
-                  <Icon className="h-7 w-7 text-red-500" />
+                <div className="absolute right-6 top-6 text-5xl font-extrabold text-slate-800">
+                  0{index + 1}
                 </div>
 
-                <span className="text-sm font-semibold text-red-400">
-                  Step {index + 1}
-                </span>
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500/10">
 
-                <h3 className="mt-3 text-2xl font-bold text-white">
+                  <Icon className="h-8 w-8 text-red-400" />
+
+                </div>
+
+                <h3 className="mt-8 text-2xl font-bold text-white">
                   {step.title}
                 </h3>
 

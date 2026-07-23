@@ -2,7 +2,7 @@ import Workspace from "@/components/workspace/Workspace";
 import { getWorkspaceData } from "@/services/workspace/getWorkspaceData";
 import { supabaseServer } from "@/lib/supabase-server";
 
-interface Props {
+interface PageProps {
   params: Promise<{
     videoId: string;
   }>;
@@ -10,29 +10,43 @@ interface Props {
 
 export default async function WorkspaceVideoPage({
   params,
-}: Props) {
+}: PageProps) {
   const { videoId } = await params;
 
-  const data = await getWorkspaceData(
-    Number(videoId)
-  );
+  const id = Number(videoId);
 
-  let publicUrl: string | null = null;
+  if (Number.isNaN(id)) {
+    throw new Error("Invalid workspace id.");
+  }
 
-  if (data.video?.file_name) {
-    const result = supabaseServer.storage
+  const {
+    video,
+    analysis,
+    clips,
+  } = await getWorkspaceData(id);
+
+  let publicUrl = "";
+
+  if (video?.file_name) {
+    const { data } = supabaseServer.storage
       .from("videos")
-      .getPublicUrl(data.video.file_name);
+      .getPublicUrl(video.file_name);
 
-    publicUrl = result.data.publicUrl;
+    publicUrl = data.publicUrl;
   }
 
   return (
-    <Workspace
-      video={data.video}
-      analysis={data.analysis}
-      clips={data.clips}
-      publicUrl={publicUrl ?? ""}
-    />
+    <main className="min-h-screen bg-[#0b0b0b]">
+      <div className="mx-auto max-w-[1700px] px-6 py-8">
+
+        <Workspace
+          video={video}
+          analysis={analysis}
+          clips={clips}
+          publicUrl={publicUrl}
+        />
+
+      </div>
+    </main>
   );
 }

@@ -1,3 +1,4 @@
+
 import Footer from "@/components/website/Footer";
 import CTA from "@/components/website/CTA";
 import FAQ from "@/components/website/FAQ";
@@ -12,6 +13,7 @@ import Header from "@/components/website/Header";
 import Hero from "@/components/website/Hero";
 import TrustedBy from "@/components/website/TrustedBy";
 
+
 export default function Home() {
   return (
     <>
@@ -19,9 +21,9 @@ export default function Home() {
  <>
   <Header />
   <Hero />
-  <TrustedBy />
   <Features />
-  <HowItWorks />
+  <TrustedBy />
+    <HowItWorks />
   <AICapabilities />
   <DashboardShowcase />
   <Statistics />

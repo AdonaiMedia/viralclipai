@@ -13,6 +13,10 @@ export interface AIOrchestratorResult {
   hook: string;
   hashtags: string;
 
+  summary: string;
+  keywords: string[];
+  recommendation: string;
+
   provider?: string;
   model?: string;
 }
@@ -37,6 +41,11 @@ export async function runAIOrchestrator(
     generateHashtags(request),
   ]);
 
+  const keywordList = hashtags.content
+    .split(/[\s,]+/)
+    .filter((item) => item.startsWith("#"))
+    .map((item) => item.replace("#", ""));
+
   return {
     success: true,
 
@@ -47,6 +56,13 @@ export async function runAIOrchestrator(
     hook: hook.content,
 
     hashtags: hashtags.content,
+
+    summary: caption.content,
+
+    keywords: keywordList,
+
+    recommendation:
+      "Generate multiple short clips and publish to YouTube Shorts, TikTok, Instagram Reels and Facebook Reels for maximum reach.",
 
     provider: title.provider,
 

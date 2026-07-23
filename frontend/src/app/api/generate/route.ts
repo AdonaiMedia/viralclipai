@@ -1,16 +1,31 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabase-server";
-import { processVideo } from "../../../services/jobs/processVideo";
+import { processVideo } from "@/services/jobs/processVideo";
 
 export async function POST(request: Request) {
   try {
+    console.log("================================");
+    console.log("GENERATE API");
+    console.log("================================");
+
     const body = await request.json();
 
-    const videoId = body.videoId;
+    const videoId = Number(body.videoId);
 
-    console.log("Generating clips for video:", videoId);
+    if (!videoId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "videoId is required.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
 
-    // Badilisha status kuwa processing
+    console.log("VIDEO ID:", videoId);
+
     const { error } = await supabaseServer
       .from("videos")
       .update({
@@ -19,6 +34,8 @@ export async function POST(request: Request) {
       .eq("id", videoId);
 
     if (error) {
+      console.error(error);
+
       return NextResponse.json(
         {
           success: false,
@@ -30,26 +47,30 @@ export async function POST(request: Request) {
       );
     }
 
-    // Anza processing
     const result = await processVideo(videoId);
+
+    console.log("PROCESS FINISHED");
 
     return NextResponse.json({
       success: true,
-      message: "Processing started successfully.",
+      message: "Video processed successfully.",
       data: result,
     });
 
   } catch (error) {
+
+    console.error("GENERATE API ERROR");
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Server Error",
+        message: "Internal server error.",
       },
       {
         status: 500,
       }
     );
+
   }
 }

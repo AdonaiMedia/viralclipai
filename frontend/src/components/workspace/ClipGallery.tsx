@@ -4,14 +4,21 @@ import {
   PlayCircle,
   Download,
   Share2,
-  Trash2,
   Star,
+  Clock,
 } from "lucide-react";
 
 import Card from "@/components/ui/Card";
 
+interface Clip {
+  id: number | string;
+  start_time: number;
+  end_time: number;
+  viral_score?: number;
+}
+
 interface Props {
-  clips: any[];
+  clips: Clip[];
 }
 
 export default function ClipGallery({
@@ -20,130 +27,123 @@ export default function ClipGallery({
   return (
     <Card>
 
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between">
 
         <div>
 
-          <h2 className="text-2xl font-bold text-white">
-            ✂ AI Clip Gallery
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-orange-400">
+            VIRAL CLIPS
+          </p>
+
+          <h2 className="mt-2 text-3xl font-bold text-white">
+            Clip Gallery
           </h2>
 
-          <p className="text-sm text-slate-400">
-            AI generated viral clips
+          <p className="mt-2 text-sm text-slate-400">
+            AI selected the highest-performing moments from your video.
           </p>
 
         </div>
 
-        <span className="rounded-full bg-blue-500/10 px-3 py-1 text-sm text-blue-400">
-          {clips.length} Clips
-        </span>
+        <div className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-5 py-2">
+
+          <span className="text-sm font-bold text-emerald-400">
+            {clips.length} CLIPS
+          </span>
+
+        </div>
 
       </div>
 
       {clips.length === 0 ? (
 
-        <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900 p-10 text-center">
+        <div className="flex h-[320px] flex-col items-center justify-center rounded-3xl border border-dashed border-[#4a3426] bg-[#15100c]">
 
-          <PlayCircle className="mx-auto mb-4 h-14 w-14 text-slate-600" />
+          <PlayCircle className="mb-5 h-20 w-20 text-orange-400/50" />
 
-          <h3 className="text-lg font-semibold text-white">
-            No clips generated
+          <h3 className="text-2xl font-bold text-white">
+            No Viral Clips Yet
           </h3>
 
-          <p className="mt-2 text-slate-400">
-            Upload a video and let AI generate viral clips.
+          <p className="mt-3 max-w-md text-center text-slate-400">
+            Run the AI Clip Generator to detect and create the most viral
+            moments automatically.
           </p>
 
         </div>
 
       ) : (
 
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-          {clips.map((clip) => {
+          {clips.map((clip) => (
 
-            const duration =
-              Number(clip.end_time) -
-              Number(clip.start_time);
+            <div
+              key={clip.id}
+              className="overflow-hidden rounded-3xl border border-[#4a3426] bg-[#15100c] transition-all duration-300 hover:-translate-y-2 hover:border-red-500/40 hover:shadow-2xl"
+            >
 
-            const score =
-              clip.viral_score ?? 0;
+              <div className="relative flex aspect-video items-center justify-center bg-[#100c09]">
 
-            const scoreColor =
-              score >= 80
-                ? "text-emerald-400"
-                : score >= 60
-                ? "text-yellow-400"
-                : "text-red-400";
+                <PlayCircle className="h-16 w-16 text-orange-400/60" />
 
-            return (
+                <div className="absolute left-4 top-4 rounded-full bg-red-500/10 px-3 py-1">
 
-              <div
-                key={clip.id}
-                className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 transition hover:border-blue-500/40"
-              >
+                  <span className="flex items-center gap-1 text-xs font-bold text-red-400">
 
-                <div className="flex aspect-video items-center justify-center bg-slate-800">
+                    <Star className="h-3 w-3" />
 
-                  <PlayCircle className="h-16 w-16 text-slate-600" />
+                    {clip.viral_score ?? 0}%
 
-                </div>
-
-                <div className="space-y-4 p-5">
-
-                  <div>
-
-                    <h3 className="font-semibold text-white">
-                      Clip #{clip.id}
-                    </h3>
-
-                    <p className="mt-1 text-sm text-slate-400">
-                      {clip.start_time}s → {clip.end_time}s
-                    </p>
-
-                    <p className="text-xs text-slate-500">
-                      Duration: {duration}s
-                    </p>
-
-                  </div>
-
-                  <div className="flex items-center justify-between">
-
-                    <span
-                      className={`rounded-full bg-slate-800 px-3 py-1 text-sm font-semibold ${scoreColor}`}
-                    >
-                      🔥 {score}
-                    </span>
-
-                    <div className="flex gap-2">
-
-                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
-                        <Star className="h-4 w-4 text-yellow-400" />
-                      </button>
-
-                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
-                        <Download className="h-4 w-4 text-blue-400" />
-                      </button>
-
-                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
-                        <Share2 className="h-4 w-4 text-emerald-400" />
-                      </button>
-
-                      <button className="rounded-lg bg-slate-800 p-2 hover:bg-slate-700">
-                        <Trash2 className="h-4 w-4 text-red-400" />
-                      </button>
-
-                    </div>
-
-                  </div>
+                  </span>
 
                 </div>
 
               </div>
 
-            );
+              <div className="p-5">
 
-          })}
+                <div className="mb-5 flex items-center justify-between">
+
+                  <h3 className="font-bold text-white">
+                    Viral Clip #{clip.id}
+                  </h3>
+
+                  <span className="flex items-center gap-2 text-sm text-slate-400">
+
+                    <Clock className="h-4 w-4" />
+
+                    {clip.start_time}s - {clip.end_time}s
+
+                  </span>
+
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+
+                  <button className="rounded-xl bg-gradient-to-r from-red-600 to-orange-500 py-3 font-semibold text-white transition hover:from-red-500 hover:to-orange-400">
+
+                    <Download className="mr-2 inline h-4 w-4" />
+
+                    Export
+
+                  </button>
+
+                  <button className="rounded-xl border border-[#4a3426] bg-[#201712] py-3 font-semibold text-slate-300 transition hover:bg-[#2d2119]">
+
+                    <Share2 className="mr-2 inline h-4 w-4" />
+
+                    Share
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))}
 
         </div>
 

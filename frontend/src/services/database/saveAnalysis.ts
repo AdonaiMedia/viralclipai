@@ -6,16 +6,20 @@ export async function saveAnalysis(
   viralMoments: string,
   overallScore: number
 ) {
+  console.log("Saving analysis...");
 
   const { data, error } = await supabaseServer
     .from("viral_analysis")
     .insert({
       video_id: videoId,
-      intelligence: intelligence,
+      intelligence,
       viral_moments: viralMoments,
       overall_score: overallScore,
     })
     .select();
+
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
   if (error) {
     throw error;

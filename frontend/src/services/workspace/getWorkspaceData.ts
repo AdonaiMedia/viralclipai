@@ -22,9 +22,16 @@ export async function getWorkspaceData(videoId: number) {
         .order("viral_score", { ascending: false }),
     ]);
 
-  if (videoError) {
-  console.error("VIDEO ERROR:", videoError);
-  throw videoError;
+ if (videoError) {
+  console.log("========================");
+  console.log("VIDEO ID:", videoId);
+  console.log("VIDEO ERROR CODE:", videoError.code);
+  console.log("VIDEO ERROR MESSAGE:", videoError.message);
+  console.log("VIDEO ERROR DETAILS:", videoError.details);
+  console.log("VIDEO ERROR HINT:", videoError.hint);
+  console.log("========================");
+
+  throw new Error(videoError.message);
 }
 
 if (analysisError) {
